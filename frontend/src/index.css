@@ -1,12 +1,29 @@
 @import "tailwindcss";
 
+/* Definisi Tema Tailwind v4 */
+@theme {
+  /* Warna Brand */
+  --color-brand-bg-start: #81A1E0;
+  --color-brand-bg-mid: #C3D7F6;
+  --color-brand-bg-end: #F0F6FF;
+  --color-brand-star: #FFE2DF;
+  --color-brand-surface: #FFFFFF;
+  --color-brand-text: #000000;
+  --color-brand-primary: #65A9E0;
+  --color-brand-secondary: #E4EDFF;
+  --color-brand-accent: #9EB7E9;
+
+  /* Font Kustom */
+  --font-sans: "Poppins", sans-serif;
+}
+
 @layer base {
   body {
     margin: 0;
     min-height: 100vh;
-    background: linear-gradient(to top, #81A1E0 0%, #C3D7F6 40%, #F0F6FF 100%);
+    background: linear-gradient(to top, var(--color-brand-bg-start) 0%, var(--color-brand-bg-mid) 35%, var(--color-brand-bg-end) 100%);
     background-attachment: fixed;
-    color: #000000;
-    -webkit-font-smoothing: antialiased; 
+    color: var(--color-brand-text);
+    font-family: var(--font-sans);
   }
 }
