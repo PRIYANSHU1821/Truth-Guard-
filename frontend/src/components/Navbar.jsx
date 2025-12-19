@@ -46,7 +46,7 @@ const Navbar = () => {
       )}
 
       {/* main navbar */}
-      <header className="fixed top-6 left-0 right-0 z-50 flex justify-center px-4">
+      <header className="fixed top-4 left-0 right-0 z-50 flex justify-center px-4">
         <nav
           className={`
             relative w-full max-w-4xl
@@ -93,12 +93,12 @@ const Navbar = () => {
           />
 
           {/* content container */}
-          <div className="relative z-10 px-6 py-3 flex justify-between items-center">
+          <div className="relative z-10 px-5 py-2 flex justify-between items-center">
             {/* Logo */}
             <a
               href="#"
               className="
-                text-xl font-semibold tracking-tight
+                text-lg font-semibold tracking-tight
                 text-brand-text
                 transition-transform duration-200
                 hover:scale-[1.04]
@@ -109,7 +109,7 @@ const Navbar = () => {
             </a>
 
             {/* desktop navigation */}
-            <div className="hidden md:flex items-center space-x-8">
+            <div className="hidden md:flex items-center space-x-6">
               {navLinks.map((link) => (
                 <a
                   key={link.name}
@@ -167,7 +167,7 @@ const Navbar = () => {
               <button
                 className="
                   relative overflow-hidden group
-                  px-6 py-2
+                  px-5 py-1.5
                   rounded-full
                   transition-all duration-300
                   hover:scale-[1.08]
