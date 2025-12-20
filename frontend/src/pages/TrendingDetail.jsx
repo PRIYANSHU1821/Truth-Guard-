@@ -10,7 +10,7 @@ const TrendingDetail = ({ item, onBack }) => {
       animate={{ opacity: 1, x: 0 }}
       exit={{ opacity: 0, x: 100 }}
       transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
-      className="fixed inset-0 z-[60] bg-gradient-to-b from-brand-bgEnd via-brand-bgMid to-brand-bgStart overflow-y-auto"
+      className="fixed inset-0 z-60 bg-linear-to-b from-brand-bgEnd via-brand-bgMid to-brand-bgStart overflow-y-auto"
     >
       <div className="min-h-screen py-6 px-3 md:py-8 md:px-4">
         <div className="max-w-4xl mx-auto">
@@ -35,7 +35,7 @@ const TrendingDetail = ({ item, onBack }) => {
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2 }}
             // Ganti bg-brand-surface/70 dan border-brand-surface/60
-            className="bg-brand-surface/70 backdrop-blur-2xl rounded-2xl md:rounded-[2rem] overflow-hidden shadow-2xl border border-brand-surface/60"
+            className="bg-brand-surface/70 backdrop-blur-2xl rounded-2xl md:rounded-4xl overflow-hidden shadow-2xl border border-brand-surface/60"
           >
             {/* Header Section */}
             <div className="p-4 md:p-8 border-b border-brand-secondary/50">
@@ -79,7 +79,7 @@ const TrendingDetail = ({ item, onBack }) => {
                     className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
                   />
                   {/* Gradient menggunakan brand-text (hitam) */}
-                  <div className="absolute inset-0 bg-gradient-to-t from-brand-text/50 to-transparent" />
+                  <div className="absolute inset-0 bg-linear-to-t from-brand-text/50 to-transparent" />
                   
                   {/* Floating Status */}
                   {/* Ganti bg-white/20 -> bg-brand-surface/20, border-white -> border-brand-surface */}
