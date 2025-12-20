@@ -45,7 +45,7 @@ const AnalyzeForm = () => {
         />
 
         <div className="flex justify-between items-center mt-4 pt-4 border-t border-gray-50">
-          {/* Dropdown Selector */}
+          {/* dropdown selector */}
           <div className="relative">
             <motion.button
               whileTap={{ scale: 0.95 }}
@@ -60,7 +60,7 @@ const AnalyzeForm = () => {
               {mode}
             </motion.button>
 
-            {/* Dropdown Menu - Secondary Background & Checkmark */}
+            {/* dropdown menu */}
             <AnimatePresence>
               {showDropdown && (
                 <motion.div
@@ -81,7 +81,7 @@ const AnalyzeForm = () => {
                         }`}
                       >
                         {item}
-                        {/* Ikon Ceklis untuk pilihan yang aktif */}
+                        {/* ceklis */}
                         {mode === item && (
                           <motion.svg 
                             initial={{ scale: 0 }}
@@ -103,7 +103,7 @@ const AnalyzeForm = () => {
             </AnimatePresence>
           </div>
 
-          {/* Analyze Button */}
+          {/* analyze button */}
           <motion.button
             disabled={loading || !inputText}
             whileHover={{ scale: 1.02, backgroundColor: "#5898d0" }}
@@ -111,19 +111,30 @@ const AnalyzeForm = () => {
             onClick={handleAnalyze}
             className={`
               flex items-center gap-2 px-4 py-1.5 md:px-6 md:py-2.5 rounded-full text-[11px] md:text-sm font-bold text-white shadow-lg transition-all
-              ${loading || !inputText ? 'bg-gray-300' : 'bg-brand-primary'}
+              bg-brand-primary 
+              ${loading || !inputText ? 'opacity-60 cursor-not-allowed' : 'hover:brightness-110'}
             `}
           >
             {loading ? (
               <div className="w-3.5 h-3.5 md:w-4 md:h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
-            ) : (
-              "Analyze With AI"
+            ) : (<>
+                {/* icon */}
+                <svg 
+                  className="w-3.5 h-3.5 md:w-4 md:h-4" 
+                  fill="currentColor" 
+                  viewBox="0 0 24 24" 
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path d="M19 9l1.25-2.75L23 5l-2.75-1.25L19 1l-1.25 2.75L15 5l2.75 1.25L19 9zm-7.5.5L9 4 6.5 9.5 1 12l5.5 2.5L9 20l2.5-5.5L17 12l-5.5-2.5zM19 15l-1.25 2.75L15 19l2.75 1.25L19 23l1.25-2.75L23 19l-2.75-1.25L19 15z" />
+                </svg>
+                Analyze With AI
+              </>
             )}
           </motion.button>
         </div>
       </motion.div>
 
-      {/* Result Section */}
+      {/* result section */}
       <AnimatePresence>
         {result && (
           <motion.div
