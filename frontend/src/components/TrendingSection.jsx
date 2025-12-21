@@ -16,7 +16,7 @@ const TrendingSection = ({ onItemClick }) => {
   };
 
   return (
-    <div className="w-full max-w-360 mx-auto px-6 md:px-12 lg:px-16 mt-16 mb-20">
+    <div className="w-full max-w-360 mx-auto px-6 md:px-12 lg:px-16 mb-20">
       {/* header section */}
       <motion.div
         initial={{ opacity: 0, y: 20 }}
@@ -24,7 +24,7 @@ const TrendingSection = ({ onItemClick }) => {
         transition={{ duration: 0.6 }}
         className="flex flex-col items-center mb-10 text-center"
       >
-        <div className="bg-brand-secondary text-brand-text px-3 py-0.5 md:px-4 md:py-1 rounded-full text-[10px] md:text-sm font-semibold border border-brand-primary mt-30 md:mt-20">
+        <div className="bg-brand-secondary text-brand-text px-3 py-0.5 md:px-4 md:py-1 rounded-full text-[10px] md:text-sm font-semibold border border-brand-primary">
           Global Insights
         </div>
 

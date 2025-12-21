@@ -4,6 +4,7 @@ import Navbar from "./components/Navbar";
 import AnalyzeForm from "./components/AnalyzeForm";
 import TrendingSection from "./components/TrendingSection";
 import TrendingDetail from "./pages/TrendingDetail";
+import HowItWorks from "./components/HowItWorks";
 import { motion, AnimatePresence } from "framer-motion";
 
 function App() {
@@ -42,7 +43,7 @@ function App() {
             <motion.h1
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
-              className="text-[28px] md:text-4xl lg:text-5xl font-bold text-brand-text leading-tight mb-2 text-center"
+              className="text-[25px] md:text-4xl lg:text-5xl font-bold text-brand-text leading-tight mb-2 text-center"
             >
               Verify Before You <span className="text-brand-primary">Trust</span>
             </motion.h1>
@@ -52,7 +53,7 @@ function App() {
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.1 }}
-              className="text-[28px] md:text-4xl lg:text-5xl font-bold text-brand-text leading-tight mb-12 text-center"
+              className="text-[25px] md:text-4xl lg:text-5xl font-bold text-brand-text leading-tight mb-12 text-center"
             >
               With Wonder AI
             </motion.h1>
@@ -65,6 +66,11 @@ function App() {
             {/* --- trending section --- */}
             <section id="trending" className="w-full max-w-7xl z-10 mb-16">
               <TrendingSection onItemClick={setSelectedTrend} />
+            </section>
+
+            {/* --- how it works section --- */}
+            <section className="w-full z-10">
+              <HowItWorks />
             </section>
 
             <footer className="mt-auto py-8 text-brand-text/60 text-sm">

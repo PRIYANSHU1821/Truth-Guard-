@@ -29,7 +29,7 @@ const AnalyzeForm = () => {
   };
 
   return (
-    <div className="flex flex-col items-center w-full px-2 md:px-0">
+    <div className="flex flex-col items-center w-full px-2 md:px-0 mb-35 md:mb-30">
       <motion.div
         initial={{ opacity: 0, y: 40 }}
         animate={{ opacity: 1, y: 0 }}
