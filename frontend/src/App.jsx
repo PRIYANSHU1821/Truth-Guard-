@@ -7,6 +7,7 @@ import TrendingDetail from "./pages/TrendingDetail";
 import HowItWorks from "./components/HowItWorks";
 import Disclaimer from "./components/Disclaimer";
 import About from "./components/About";
+import Footer from "./components/Footer";
 import { motion, AnimatePresence } from "framer-motion";
 
 function App() {
@@ -85,9 +86,8 @@ function App() {
               <About />
             </section>
 
-            <footer className="mt-auto py-8 text-brand-text/60 text-sm">
-              © 2025 Wonder AI. All rights reserved.
-            </footer>
+            {/* --- footer section --- */}
+            <Footer />
           </motion.div>
         )}
       </AnimatePresence>
