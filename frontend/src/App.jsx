@@ -5,6 +5,8 @@ import AnalyzeForm from "./components/AnalyzeForm";
 import TrendingSection from "./components/TrendingSection";
 import TrendingDetail from "./pages/TrendingDetail";
 import HowItWorks from "./components/HowItWorks";
+import Disclaimer from "./components/Disclaimer";
+import About from "./components/About";
 import { motion, AnimatePresence } from "framer-motion";
 
 function App() {
@@ -71,6 +73,16 @@ function App() {
             {/* --- how it works section --- */}
             <section className="w-full z-10">
               <HowItWorks />
+            </section>
+
+            {/* --- disclaimer section --- */}
+            <section className="w-full z-10">
+              <Disclaimer />
+            </section>
+
+            {/* --- about section --- */}
+            <section className="w-full z-10">
+              <About />
             </section>
 
             <footer className="mt-auto py-8 text-brand-text/60 text-sm">
