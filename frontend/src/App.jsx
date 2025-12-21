@@ -38,7 +38,7 @@ function App() {
             className="w-full flex flex-col items-center"
           >
             {/* badge */}
-            <div className="bg-brand-secondary text-brand-text px-3 py-0.5 md:px-4 md:py-1 rounded-full text-[10px] md:text-sm font-semibold border border-brand-primary mb-6 mt-12 md:mt-8">
+            <div className="bg-brand-secondary text-brand-text px-3 py-0.5 md:px-4 md:py-1 rounded-full text-[12px] md:text-sm font-semibold border border-brand-primary mb-6 mt-20 md:mt-8">
               AI Misinformation Detection
             </div>
 
@@ -46,7 +46,7 @@ function App() {
             <motion.h1
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
-              className="text-[25px] md:text-4xl lg:text-5xl font-bold text-brand-text leading-tight mb-2 text-center"
+              className="text-[29px] md:text-4xl lg:text-5xl font-bold text-brand-text leading-tight mb-2 text-center"
             >
               Verify Before You <span className="text-brand-primary">Trust</span>
             </motion.h1>
@@ -56,7 +56,7 @@ function App() {
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.1 }}
-              className="text-[25px] md:text-4xl lg:text-5xl font-bold text-brand-text leading-tight mb-12 text-center"
+              className="text-[29px] md:text-4xl lg:text-5xl font-bold text-brand-text leading-tight mb-12 text-center"
             >
               With Wonder AI
             </motion.h1>

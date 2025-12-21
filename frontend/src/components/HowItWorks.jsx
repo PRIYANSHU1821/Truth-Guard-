@@ -91,7 +91,7 @@ const HowItWorks = () => {
         viewport={{ once: true }}
         className="flex flex-col items-center mb-12 text-center"
       >
-        <div className="bg-brand-secondary text-brand-text px-4 py-1 rounded-full text-xs font-bold border border-brand-primary mb-4">
+        <div className="bg-brand-secondary text-brand-text px-4 py-1 rounded-full text-xs md:text-sm font-bold border border-brand-primary mb-4">
           The Process
         </div>
         <h2 className="text-[28px] md:text-5xl font-bold text-brand-text">

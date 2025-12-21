@@ -35,7 +35,7 @@ const Navbar = () => {
   const navLinks = [
     { name: "Trending", href: "#trending" },
     { name: "How it Works", href: "#how-it-works" },
-    { name: "Disclaimer", href: "#how-it-works" },
+    { name: "Disclaimer", href: "#disclaimer" },
     { name: "About", href: "#about" },
   ];
 
@@ -46,7 +46,7 @@ const Navbar = () => {
         <div
           className="fixed top-0 left-0 right-0 z-40 md:hidden pointer-events-none"
           style={{ 
-            height: '430px', 
+            height: '470px', 
             background: 'rgba(0, 0, 0, 0.15)',
             backdropFilter: 'blur(20px)',
             WebkitBackdropFilter: 'blur(20px)',

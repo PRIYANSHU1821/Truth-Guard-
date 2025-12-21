@@ -28,7 +28,7 @@ const Disclaimer = () => {
         viewport={{ once: true }}
         className="flex flex-col items-center mb-12 text-center"
       >
-        <div className="bg-brand-secondary text-brand-text px-4 py-1 rounded-full text-[10px] md:text-xs font-bold border border-brand-primary mb-4">
+        <div className="bg-brand-secondary text-brand-text px-4 py-1 rounded-full text-[12px] md:text-sm font-bold border border-brand-primary mb-4">
           Transparency & Ethics
         </div>
         <h2 className="text-[28px] md:text-5xl font-bold text-brand-text">
@@ -143,7 +143,7 @@ const Disclaimer = () => {
               before sharing.
             </p>
 
-            <button className="px-6 py-2.5 md:px-8 md:py-3 bg-brand-primary text-white text-[10px] md:text-sm font-bold rounded-full hover:shadow-lg hover:brightness-110 transition-all transform hover:-translate-y-1">
+            <button className="px-6 py-2.5 md:px-8 md:py-3 bg-brand-primary text-white text-[12px] md:text-sm font-bold rounded-full hover:shadow-lg hover:brightness-110 transition-all transform hover:-translate-y-1">
               Read Full Guidelines
             </button>
           </div>

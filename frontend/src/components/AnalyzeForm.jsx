@@ -41,7 +41,7 @@ const AnalyzeForm = () => {
           value={inputText}
           onChange={(e) => setInputText(e.target.value)}
           placeholder={mode === "Text" ? "Paste text here..." : "Paste link here..."}
-          className="w-full h-20 md:h-36 bg-transparent outline-none text-sm md:text-base text-brand-text placeholder-gray-300 resize-none font-medium leading-relaxed"
+          className="w-full h-25 md:h-36 bg-transparent outline-none text-sm md:text-base text-brand-text placeholder-gray-300 resize-none font-medium leading-relaxed"
         />
 
         <div className="flex justify-between items-center mt-4 pt-4 border-t border-gray-50">
@@ -50,7 +50,7 @@ const AnalyzeForm = () => {
             <motion.button
               whileTap={{ scale: 0.95 }}
               onClick={() => setShowDropdown(!showDropdown)}
-              className="flex items-center gap-1.5 bg-brand-secondary text-brand-primary px-3 py-1.5 md:px-5 md:py-2 rounded-full text-[11px] md:text-sm font-medium shadow-sm transition-all"
+              className="flex items-center gap-1.5 bg-brand-secondary text-brand-primary px-3 py-1.5 md:px-5 md:py-2 rounded-full text-[12px] md:text-sm font-medium shadow-sm transition-all"
             >
               <motion.span animate={{ rotate: showDropdown ? 180 : 0 }}>
                 <svg className="w-3.5 h-3.5 md:w-4 md:h-4" fill="currentColor" viewBox="0 0 20 20">
@@ -74,7 +74,7 @@ const AnalyzeForm = () => {
                       <button
                         key={item}
                         onClick={() => { setMode(item); setShowDropdown(false); }}
-                        className={`px-4 py-2.5 md:py-3 text-[11px] md:text-sm font-medium text-left flex items-center justify-between transition-all ${
+                        className={`px-4 py-2.5 md:py-3 text-[12px] md:text-sm font-medium text-left flex items-center justify-between transition-all ${
                           mode === item 
                             ? "bg-brand-primary text-white" 
                             : "text-brand-text hover:bg-brand-primary/10"
@@ -110,7 +110,7 @@ const AnalyzeForm = () => {
             whileTap={{ scale: 0.95 }}
             onClick={handleAnalyze}
             className={`
-              flex items-center gap-2 px-4 py-1.5 md:px-6 md:py-2.5 rounded-full text-[11px] md:text-sm font-bold text-white shadow-lg transition-all
+              flex items-center gap-2 px-4 py-1.5 md:px-6 md:py-2.5 rounded-full text-[14px] md:text-sm font-bold text-white shadow-lg transition-all
               bg-brand-primary 
               ${loading || !inputText ? 'opacity-60 cursor-not-allowed' : 'hover:brightness-110'}
             `}

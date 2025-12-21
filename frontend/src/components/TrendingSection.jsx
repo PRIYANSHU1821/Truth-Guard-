@@ -24,7 +24,7 @@ const TrendingSection = ({ onItemClick }) => {
         transition={{ duration: 0.6 }}
         className="flex flex-col items-center mb-10 text-center"
       >
-        <div className="bg-brand-secondary text-brand-text px-3 py-0.5 md:px-4 md:py-1 rounded-full text-[10px] md:text-sm font-semibold border border-brand-primary">
+        <div className="bg-brand-secondary text-brand-text px-3 py-0.5 md:px-4 md:py-1 rounded-full text-[12px] md:text-sm font-semibold border border-brand-primary">
           Global Insights
         </div>
 
@@ -77,7 +77,7 @@ const TrendingCard = ({ item, onClick, variants }) => {
         {/* badge status */}
         <div className="absolute top-2 right-2">
           <span
-            className={`px-2 py-0.5 rounded-full md:text-[11px] text-[10px] font-bold text-brand-primary backdrop-blur-md border border-brand-primary/20 ${
+            className={`px-2 py-0.5 rounded-full md:text-[11px] text-[12px] font-bold text-brand-primary backdrop-blur-md border border-brand-primary/20 ${
               item.status === "Debunked" ? "bg-brand-bg-end" : "bg-brand-accent"
             }`}
           >
@@ -87,7 +87,7 @@ const TrendingCard = ({ item, onClick, variants }) => {
 
         {/* category badge */}
         <div className="absolute bottom-2 left-2">
-          <span className="px-2 py-0.5 rounded-lg text-[10px] font-bold bg-white/20 text-white backdrop-blur-md border border-white/20">
+          <span className="px-2 py-0.5 rounded-lg text-[12px] font-bold bg-white/20 text-white backdrop-blur-md border border-white/20">
             {item.category}
           </span>
         </div>
@@ -124,7 +124,7 @@ const TrendingCard = ({ item, onClick, variants }) => {
               className="w-6 h-6 rounded-full border border-brand-secondary object-cover"
             />
             <div className="flex flex-col">
-              <span className="text-[10px] font-bold text-brand-text truncate max-w-20">
+              <span className="text-[11px] font-bold text-brand-text truncate max-w-20">
                 {item.author.name}
               </span>
             </div>
@@ -132,7 +132,7 @@ const TrendingCard = ({ item, onClick, variants }) => {
 
           {/* score */}
           <div className="flex items-center gap-1 bg-brand-secondary/30 px-2 py-1 rounded-md">
-            <span className="text-[10px] font-bold text-brand-primary">
+            <span className="text-[11px] font-bold text-brand-primary">
               {item.confidence}%
             </span>
           </div>
