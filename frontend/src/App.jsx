@@ -8,6 +8,7 @@ import HowItWorks from "./components/HowItWorks";
 import Disclaimer from "./components/Disclaimer";
 import About from "./components/About";
 import Footer from "./components/Footer";
+import ScrollToTop from "./components/ScrollToTop";
 import { motion, AnimatePresence } from "framer-motion";
 
 function App() {
@@ -18,6 +19,9 @@ function App() {
       {/* --- background --- */}
       <div className="absolute bottom-0 left-0 w-72 h-72 bg-brand-bgStart rounded-full blur-3xl opacity-40 -z-10"></div>
       {!selectedTrend && <Navbar />}
+
+      {/* --- scroll to top --- */}
+      {!selectedTrend && <ScrollToTop />}
 
       <AnimatePresence mode="wait">
         {selectedTrend ? (
