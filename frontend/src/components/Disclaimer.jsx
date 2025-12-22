@@ -1,7 +1,7 @@
 import React from "react";
 import { motion } from "framer-motion";
 
-const Disclaimer = () => {
+const Disclaimer = ({ onReadGuidelines }) => {
   const containerVariants = {
     hidden: { opacity: 0 },
     visible: {
@@ -147,7 +147,7 @@ const Disclaimer = () => {
               before sharing.
             </p>
 
-            <button className="px-6 py-2.5 md:px-8 md:py-3 bg-brand-primary text-white text-[12px] md:text-sm font-bold rounded-full hover:shadow-lg hover:brightness-110 transition-all transform group-hover:-translate-y-1">
+            <button onClick={onReadGuidelines} className="px-6 py-2.5 md:px-8 md:py-3 bg-brand-primary text-white text-[12px] md:text-sm font-bold rounded-full hover:shadow-lg hover:brightness-110 transition-all transform group-hover:-translate-y-1">
               Read Full Guidelines
             </button>
           </div>

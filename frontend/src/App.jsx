@@ -9,10 +9,12 @@ import Disclaimer from "./components/Disclaimer";
 import About from "./components/About";
 import Footer from "./components/Footer";
 import ScrollToTop from "./components/ScrollToTop";
+import Guidelines from "./components/Guidelines";
 import { motion, AnimatePresence } from "framer-motion";
 
 function App() {
   const [selectedTrend, setSelectedTrend] = useState(null);
+  const [showGuidelines, setShowGuidelines] = useState(false);
 
   return (
     <div className="relative min-h-screen w-full flex flex-col items-center px-4 overflow-hidden pt-24">
@@ -26,10 +28,10 @@ function App() {
       <AnimatePresence mode="wait">
         {selectedTrend ? (
           /* --- trending detail --- */
-          <TrendingDetail 
+          <TrendingDetail
             key="detail"
-            item={selectedTrend} 
-            onBack={() => setSelectedTrend(null)} 
+            item={selectedTrend}
+            onBack={() => setSelectedTrend(null)}
           />
         ) : (
           /* --- home --- */
@@ -52,7 +54,8 @@ function App() {
               animate={{ opacity: 1, y: 0 }}
               className="text-[29px] md:text-4xl lg:text-5xl font-bold text-brand-text leading-tight mb-2 text-center"
             >
-              Verify Before You <span className="text-brand-primary">Trust</span>
+              Verify Before You{" "}
+              <span className="text-brand-primary">Trust</span>
             </motion.h1>
 
             {/* title 2 */}
@@ -82,9 +85,9 @@ function App() {
 
             {/* --- disclaimer section --- */}
             <section className="w-full z-10">
-              <Disclaimer />
+              <Disclaimer onReadGuidelines={() => setShowGuidelines(true)} />
             </section>
-
+            
             {/* --- about section --- */}
             <section className="w-full z-10">
               <About />
@@ -93,6 +96,11 @@ function App() {
             {/* --- footer section --- */}
             <Footer />
           </motion.div>
+        )}
+      </AnimatePresence>
+      <AnimatePresence>
+        {showGuidelines && (
+          <Guidelines onClose={() => setShowGuidelines(false)} />
         )}
       </AnimatePresence>
     </div>
