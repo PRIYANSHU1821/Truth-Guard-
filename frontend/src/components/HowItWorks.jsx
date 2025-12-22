@@ -111,8 +111,22 @@ const HowItWorks = () => {
           <motion.div
             key={step.id}
             variants={itemVariants}
-            whileHover={{ y: -10 }}
-            className="relative bg-brand-surface/40 backdrop-blur-xl border border-white/50 p-8 rounded-[2.5rem] shadow-lg overflow-hidden group"
+            
+            whileHover={{ 
+              y: -10,
+              scale: 1.02, 
+              borderColor: "rgba(255, 255, 255, 0.9)",
+              boxShadow: "0 20px 40px rgba(0,0,0,0.1)"
+            }}
+            whileTap={{ 
+              scale: 0.95, 
+              y: 0, 
+              borderColor: "rgba(101, 169, 224, 0.8)", 
+              boxShadow: "0 5px 10px rgba(0,0,0,0.05)"
+            }}
+            transition={{ type: "spring", stiffness: 300, damping: 20 }}
+
+            className="relative bg-brand-surface/40 backdrop-blur-xl border border-white/50 p-8 rounded-[2.5rem] shadow-lg overflow-hidden group cursor-pointer"
           >
             <div className="absolute -right-10 -top-10 w-32 h-32 bg-brand-primary/20 rounded-full blur-3xl group-hover:bg-brand-primary/30 transition-all duration-500" />
 

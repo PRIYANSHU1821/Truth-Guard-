@@ -20,7 +20,7 @@ const Disclaimer = () => {
       id="disclaimer"
       className="w-full max-w-360 mx-auto px-6 md:px-12 lg:px-16 mb-24"
     >
-      {/* Header Section */}
+      {/* header */}
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         whileInView={{ opacity: 1, y: 0 }}
@@ -36,7 +36,7 @@ const Disclaimer = () => {
         </h2>
       </motion.div>
 
-      {/* Content Grid */}
+      {/* content grid */}
       <motion.div
         variants={containerVariants}
         initial="hidden"
@@ -44,16 +44,17 @@ const Disclaimer = () => {
         viewport={{ once: true }}
         className="grid grid-cols-1 lg:grid-cols-2 gap-6"
       >
-        {/* Kolom Kiri: Berisi 2 Kartu Terpisah */}
         <div className="flex flex-col gap-6">
           
-          {/* Card 1: AI Limitations */}
+          {/* card 1 */}
           <motion.div
             variants={itemVariants}
             whileHover={{ y: -5 }}
-            className="bg-brand-surface/40 backdrop-blur-xl border border-white/50 p-6 md:p-8 rounded-[2.5rem] shadow-lg flex flex-col md:flex-row gap-5 items-start"
+            whileTap={{ scale: 0.95 }}
+            transition={{ type: "spring", stiffness: 300, damping: 20 }}
+            className="bg-brand-surface/40 backdrop-blur-xl border border-white/50 p-6 md:p-8 rounded-[2.5rem] shadow-lg flex flex-col md:flex-row gap-5 items-start cursor-pointer group"
           >
-            <div className="w-12 h-12 md:w-14 md:h-14 bg-red-100 rounded-2xl flex items-center justify-center shrink-0 border border-red-200 shadow-sm">
+            <div className="w-12 h-12 md:w-14 md:h-14 bg-red-100 rounded-2xl flex items-center justify-center shrink-0 border border-red-200 shadow-sm group-hover:scale-110 transition-transform duration-300">
               <svg
                 className="w-5 h-5 md:w-6 md:h-6 text-red-500"
                 fill="none"
@@ -72,7 +73,6 @@ const Disclaimer = () => {
               <h3 className="text-sm md:text-xl font-bold text-brand-text mb-3">
                 AI Limitations
               </h3>
-              {/* text-justify agar rata kanan kiri */}
               <p className="text-[12px] md:text-sm text-brand-text/70 leading-relaxed text-justify">
                 WonderAI utilizes advanced Artificial Intelligence (LLMs) to
                 analyze patterns. While highly accurate,{" "}
@@ -83,13 +83,15 @@ const Disclaimer = () => {
             </div>
           </motion.div>
 
-          {/* Card 2: Data Privacy */}
+          {/* card 2 */}
           <motion.div
             variants={itemVariants}
             whileHover={{ y: -5 }}
-            className="bg-brand-surface/40 backdrop-blur-xl border border-white/50 p-6 md:p-8 rounded-[2.5rem] shadow-lg flex flex-col md:flex-row gap-5 items-start"
+            whileTap={{ scale: 0.95 }}
+            transition={{ type: "spring", stiffness: 300, damping: 20 }}
+            className="bg-brand-surface/40 backdrop-blur-xl border border-white/50 p-6 md:p-8 rounded-[2.5rem] shadow-lg flex flex-col md:flex-row gap-5 items-start cursor-pointer group"
           >
-            <div className="w-12 h-12 md:w-14 md:h-14 bg-brand-secondary rounded-2xl flex items-center justify-center shrink-0 border border-brand-primary/30 shadow-sm">
+            <div className="w-12 h-12 md:w-14 md:h-14 bg-brand-secondary rounded-2xl flex items-center justify-center shrink-0 border border-brand-primary/30 shadow-sm group-hover:scale-110 transition-transform duration-300">
               <svg
                 className="w-5 h-5 md:w-6 md:h-6 text-brand-primary"
                 fill="none"
@@ -118,16 +120,18 @@ const Disclaimer = () => {
           </motion.div>
         </div>
 
-        {/* Kolom Kanan: Card Responsibility (Terpisah) */}
+        {/* card right */}
         <motion.div
           variants={itemVariants}
           whileHover={{ scale: 1.01 }}
-          className="bg-brand-surface/60 backdrop-blur-2xl border border-white/60 p-6 md:p-12 rounded-[2.5rem] shadow-xl relative overflow-hidden flex flex-col justify-center text-center h-full"
+          whileTap={{ scale: 0.95 }}
+          transition={{ type: "spring", stiffness: 300, damping: 20 }}
+          className="bg-brand-surface/60 backdrop-blur-2xl border border-white/60 p-6 md:p-12 rounded-[2.5rem] shadow-xl relative overflow-hidden flex flex-col justify-center text-center h-full cursor-pointer group"
         >
           <div className="absolute inset-0 bg-linear-to-br from-brand-primary/5 to-transparent opacity-50" />
           
           <div className="relative z-10 flex flex-col items-center">
-            <div className="w-14 h-14 md:w-16 md:h-16 bg-brand-primary/10 rounded-full flex items-center justify-center mb-6">
+            <div className="w-14 h-14 md:w-16 md:h-16 bg-brand-primary/10 rounded-full flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300">
                <svg className="w-6 h-6 md:w-8 md:h-8 text-brand-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
                  <path strokeLinecap="round" strokeLinejoin="round" d="M12 11c0 3.517-1.009 6.799-2.753 9.571m-3.44-2.04l.054-.09A13.916 13.916 0 008 11a4 4 0 118 0c0 1.017-.07 2.019-.203 3m-2.118 6.844A21.88 21.88 0 0015.171 17m3.839 1.132c.645-2.266.99-4.659.99-7.131A8 8 0 008 4.07M3 15.364c.64-1.319 1-2.8 1-4.364 0-1.457.2-2.85.57-4.141m6.066 4.243A9.953 9.953 0 0112 15c2.5 0 4.847.655 6.879 1.804M15 10a3 3 0 11-6 0 3 3 0 016 0zm6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                </svg>
@@ -143,7 +147,7 @@ const Disclaimer = () => {
               before sharing.
             </p>
 
-            <button className="px-6 py-2.5 md:px-8 md:py-3 bg-brand-primary text-white text-[12px] md:text-sm font-bold rounded-full hover:shadow-lg hover:brightness-110 transition-all transform hover:-translate-y-1">
+            <button className="px-6 py-2.5 md:px-8 md:py-3 bg-brand-primary text-white text-[12px] md:text-sm font-bold rounded-full hover:shadow-lg hover:brightness-110 transition-all transform group-hover:-translate-y-1">
               Read Full Guidelines
             </button>
           </div>
