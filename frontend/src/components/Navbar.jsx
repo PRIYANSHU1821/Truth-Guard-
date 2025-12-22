@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from "react";
+import { motion, AnimatePresence } from "framer-motion"; 
 import logoImg from "../assets/wonder-logo.png";
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const [showHint, setShowHint] = useState(false); 
 
   useEffect(() => {
     const handleScroll = () => {
@@ -31,6 +33,32 @@ const Navbar = () => {
     }
     
     setIsOpen(false); 
+  };
+
+  const handleGetStarted = () => {
+    setShowHint(true);
+    
+    setTimeout(() => {
+      setShowHint(false);
+    }, 4000);
+
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth"
+    });
+
+    setTimeout(() => {
+      const section = document.getElementById("analyze-section");
+      if (section) {
+        const headerOffset = 120;
+        const elementPosition = section.getBoundingClientRect().top;
+        const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+        window.scrollTo({ top: offsetPosition, behavior: "smooth" });
+      }
+      
+      const input = document.getElementById("analyze-input");
+      if (input) input.focus({ preventScroll: true });
+    }, 1000);
   };
 
   const navLinks = [
@@ -95,7 +123,6 @@ const Navbar = () => {
               onClick={(e) => handleSmoothScroll(e, "#")} 
               className="flex items-center gap-2 text-lg font-semibold tracking-tight text-brand-text transition-transform duration-200 hover:scale-[1.04] active:scale-95"
             >
-              {/* logo */}
               <img 
                 src={logoImg} 
                 alt="WonderAI Logo" 
@@ -120,35 +147,53 @@ const Navbar = () => {
                     ease-[cubic-bezier(0.16,1,0.3,1)]
                     hover:text-brand-primary
                     hover:-translate-y-0.5
-                    active:scale-95  /* Efek animasi klik (mengecil) */
+                    active:scale-95
                   "
                 >
                   <span className="relative z-10">
                     {link.name}
                   </span>
-
-                  {/* glass hover background */}
                   <span className="absolute -inset-1.5 rounded-xl bg-white/30 backdrop-blur-md opacity-0 scale-90 transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:opacity-100 group-hover:scale-100 z-0" />
-
-                  {/* underline glow */}
                   <span className="absolute left-1/2 -bottom-2 h-0.5 w-0 bg-brand-primary rounded-full blur-[0.5px] transition-all duration-300 ease-out group-hover:w-full group-hover:left-0" />
                 </a>
               ))}
 
-              {/* get started button */}
-              <button
-                className="relative overflow-hidden group px-5 py-1.5 rounded-full transition-all duration-300 hover:scale-[1.08] active:scale-95"
-                style={{
-                  background: 'rgba(101, 169, 224, 0.9)',
-                  backdropFilter: 'blur(20px)',
-                  boxShadow: '0 4px 24px rgba(101, 169, 224, 0.4)'
-                }}
-              >
-                <div className="pointer-events-none absolute inset-x-0 top-0 h-px bg-linear-to-r from-transparent via-white/90 to-transparent" />
-                <div className="pointer-events-none absolute inset-0 bg-linear-to-b from-white/30 via-transparent to-black/10 rounded-full" />
-                <span className="relative z-10 text-sm font-medium text-white">Get Started</span>
-                <div className="pointer-events-none absolute inset-0 bg-white/20 rounded-full opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
-              </button>
+              {/* get started desktop */}
+              <div className="relative">
+                <button
+                  onClick={handleGetStarted}
+                  className="relative overflow-hidden group px-5 py-1.5 rounded-full transition-all duration-300 hover:scale-[1.08] active:scale-95"
+                  style={{
+                    background: 'rgba(101, 169, 224, 0.9)',
+                    backdropFilter: 'blur(20px)',
+                    boxShadow: '0 4px 24px rgba(101, 169, 224, 0.4)'
+                  }}
+                >
+                  <div className="pointer-events-none absolute inset-x-0 top-0 h-px bg-linear-to-r from-transparent via-white/90 to-transparent" />
+                  <div className="pointer-events-none absolute inset-0 bg-linear-to-b from-white/30 via-transparent to-black/10 rounded-full" />
+                  <span className="relative z-10 text-sm font-medium text-white">Get Started</span>
+                  <div className="pointer-events-none absolute inset-0 bg-white/20 rounded-full opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
+                </button>
+
+                {/* hint text */}
+                <AnimatePresence>
+                  {showHint && (
+                    <motion.div
+                      initial={{ opacity: 0, y: -10, scale: 0.9 }}
+                      animate={{ opacity: 1, y: 0, scale: 1 }}
+                      exit={{ opacity: 0, y: -10, scale: 0.9 }}
+                      className="absolute top-full right-0 mt-3 w-max px-4 py-2 rounded-xl shadow-xl z-50 pointer-events-none bg-brand-bg-start"
+                    >
+                      <div 
+                        className="absolute -top-1.5 right-6 w-3 h-3 rotate-45 bg-brand-bg-start" 
+                      />
+                      <p className="relative z-10 text-xs font-medium text-white">
+                        Try analyzing in the input box below! 👇
+                      </p>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </div>
             </div>
 
             {/* mobile menu button */}
@@ -171,7 +216,7 @@ const Navbar = () => {
               bg-white/40 backdrop-blur-3xl backdrop-saturate-180%
               rounded-3xl
               shadow-[0_20px_60px_rgba(0,0,0,0.15)]
-              overflow-hidden
+              overflow-visible
               transition-all duration-300 ease-out origin-top
               ${isOpen ? "scale-100 opacity-100" : "scale-95 opacity-0 pointer-events-none"}
             `}
@@ -179,12 +224,11 @@ const Navbar = () => {
           >
             <div className="pointer-events-none absolute inset-x-0 top-0 h-px bg-linear-to-r from-transparent via-white/70 to-transparent" />
 
-            <div className="flex flex-col p-4 space-y-2 text-left">
+            <div className="flex flex-col p-4 space-y-2 text-left relative">
               {navLinks.map((link) => (
                 <a
                   key={link.name}
                   href={link.href}
-                  // Handler scroll untuk mobile
                   onClick={(e) => handleSmoothScroll(e, link.href)}
                   className="
                     py-2 pl-4 rounded-xl
@@ -192,19 +236,39 @@ const Navbar = () => {
                     transition-all duration-200
                     hover:bg-brand-secondary/70
                     hover:scale-[1.03]
-                    active:scale-95  /* Efek tekan di mobile */
+                    active:scale-95
                   "
                 >
                   {link.name}
                 </a>
               ))}
 
-              <button className="relative overflow-hidden mt-2 w-full py-2.5 rounded-xl font-medium transition-all duration-200 hover:scale-[1.03] active:scale-95"
-                style={{ background: 'rgba(101, 169, 224, 0.9)', backdropFilter: 'blur(20px)' }}
-              >
-                <div className="pointer-events-none absolute inset-x-0 top-0 h-px bg-linear-to-r from-transparent via-white/80 to-transparent" />
-                <span className="relative z-10 text-white">Get Started</span>
-              </button>
+              <div className="relative">
+                <button 
+                  onClick={handleGetStarted}
+                  className="relative overflow-hidden mt-2 w-full py-2.5 rounded-xl font-medium transition-all duration-200 hover:scale-[1.03] active:scale-95"
+                  style={{ background: 'rgba(101, 169, 224, 0.9)', backdropFilter: 'blur(20px)' }}
+                >
+                  <div className="pointer-events-none absolute inset-x-0 top-0 h-px bg-linear-to-r from-transparent via-white/80 to-transparent" />
+                  <span className="relative z-10 text-white">Get Started</span>
+                </button>
+
+                {/* hint text mobile */}
+                <AnimatePresence>
+                  {showHint && (
+                    <motion.div
+                      initial={{ opacity: 0, y: -5 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: -5 }}
+                      className="mt-2 px-4 py-2 rounded-xl text-center shadow-md bg-brand-bg-start"
+                    >
+                      <p className="text-xs font-medium text-white">
+                        Try analyzing in the input box below! 👇
+                      </p>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </div>
             </div>
           </div>
         </nav>
