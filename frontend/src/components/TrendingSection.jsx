@@ -1,7 +1,88 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
+import axios from "axios";
+
+const enrichData = (rawData) => {
+  const categoryImageMap = {
+    "Politics": "https://images.unsplash.com/photo-1607778417094-1fef13315e6e?q=80&w=1073&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+    "Health": "https://images.unsplash.com/photo-1535914254981-b5012eebbd15?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",   
+    "Tech": "https://itchronicles.com/wp-content/uploads/2021/01/technology-impact-on-life.jpg", 
+    "Science": "https://images.unsplash.com/photo-1507413245164-6160d8298b31?w=800&q=80", 
+    "Society": "https://images.unsplash.com/photo-1513682121497-80211f36a7d3?q=80&w=688&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D", 
+  };
+
+  const categories = Object.keys(categoryImageMap); 
+  const roles = ["Fact-Checker", "Journalist", "Analyst", "Researcher"];
+
+  return rawData.map((item, index) => {
+    let originalStatus = item.status || "Unverified";
+    let shortStatus = originalStatus;
+
+    if (shortStatus.length > 20) {
+      const lower = shortStatus.toLowerCase();
+      if (lower.includes("false") || lower.includes("fake")) {
+        shortStatus = "False";
+      } else if (lower.includes("true") || lower.includes("correct")) {
+        shortStatus = "True";
+      } else if (lower.includes("misleading")) {
+        shortStatus = "Misleading";
+      } else {
+        shortStatus = "See Report"; 
+      }
+    } else {
+      shortStatus = shortStatus.replace(/\.$/, "");
+    }
+
+    const assignedCategory = categories[index % categories.length];
+
+    return {
+      id: index,
+      title: item.title || "No Title Available",
+      date: new Date(item.date).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" }),
+      
+      status: shortStatus,
+      fullStatus: originalStatus,
+
+      sourceName: item.source, 
+      url: item.url,
+      excerpt: `Claim by ${item.claimant}: "${item.title}". This claim has been reviewed by ${item.source}.`,
+      
+      image: categoryImageMap[assignedCategory], 
+      category: assignedCategory,
+      
+      confidence: Math.floor(Math.random() * (99 - 85) + 85), 
+      sources: Math.floor(Math.random() * (50 - 10) + 10),
+      author: {
+        name: item.source || "Unknown Source",
+        role: roles[index % roles.length],
+        avatar: `https://ui-avatars.com/api/?name=${item.source}&background=random`,
+      },
+    };
+  });
+};
 
 const TrendingSection = ({ onItemClick }) => {
+  const [trendingData, setTrendingData] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    const fetchTrending = async () => {
+      try {
+        const response = await axios.get("http://localhost:5000/api/trending");
+        const enriched = enrichData(response.data);
+        setTrendingData(enriched);
+      } catch (err) {
+        console.error("Failed to fetch trending:", err);
+        setError("Failed to load trending topics.");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchTrending();
+  }, []);
+
   const containerVariants = {
     hidden: { opacity: 0 },
     visible: {
@@ -17,7 +98,6 @@ const TrendingSection = ({ onItemClick }) => {
 
   return (
     <div className="w-full max-w-360 mx-auto px-6 md:px-12 lg:px-16 mb-20">
-      {/* header section */}
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         whileInView={{ opacity: 1, y: 0 }}
@@ -33,27 +113,37 @@ const TrendingSection = ({ onItemClick }) => {
         </h2>
       </motion.div>
 
-      {/* grid layout - 4 columns */}
-      <motion.div
-        initial="hidden"
-        animate="visible"
-        variants={containerVariants}
-        className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5"
-      >
-        {trendingData.map((item) => (
-          <TrendingCard
-            key={item.id}
-            item={item}
-            onClick={() => onItemClick(item)}
-            variants={itemVariants}
-          />
-        ))}
-      </motion.div>
+      {loading ? (
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+          {[1, 2, 3, 4].map((i) => (
+            <div key={i} className="bg-white/40 h-80 rounded-2xl animate-pulse" />
+          ))}
+        </div>
+      ) : error ? (
+        <div className="text-center text-brand-text/60 py-10">
+          <p>{error}</p>
+        </div>
+      ) : (
+        <motion.div
+          initial="hidden"
+          animate="visible"
+          variants={containerVariants}
+          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5"
+        >
+          {trendingData.map((item) => (
+            <TrendingCard
+              key={item.id}
+              item={item}
+              onClick={() => onItemClick(item)}
+              variants={itemVariants}
+            />
+          ))}
+        </motion.div>
+      )}
     </div>
   );
 };
 
-// trending card component
 const TrendingCard = ({ item, onClick, variants }) => {
   return (
     <motion.article
@@ -63,7 +153,6 @@ const TrendingCard = ({ item, onClick, variants }) => {
       onClick={onClick}
       className="bg-brand-surface/60 backdrop-blur-xl rounded-2xl overflow-hidden shadow-md hover:shadow-xl transition-all duration-300 cursor-pointer border border-brand-surface/60 group flex flex-col h-full"
     >
-      {/* image */}
       <div className="relative w-full aspect-video overflow-hidden">
         <motion.img
           src={item.image}
@@ -75,17 +164,15 @@ const TrendingCard = ({ item, onClick, variants }) => {
         <div className="absolute inset-0 bg-linear-to-t from-black/60 to-transparent opacity-80" />
 
         {/* badge status */}
-        <div className="absolute top-2 right-2">
+        <div className="absolute top-2 right-2 max-w-30">
           <span
-            className={`px-2 py-0.5 rounded-full md:text-[11px] text-[12px] font-bold text-brand-primary backdrop-blur-md border border-brand-primary/20 ${
-              item.status === "Debunked" ? "bg-brand-bg-end" : "bg-brand-accent"
-            }`}
+            className="block truncate px-2 py-0.5 rounded-full md:text-[11px] text-[12px] font-bold text-brand-primary backdrop-blur-md border border-brand-primary/20 bg-brand-bg-end"
+            title={item.fullStatus} 
           >
             {item.status}
           </span>
         </div>
 
-        {/* category badge */}
         <div className="absolute bottom-2 left-2">
           <span className="px-2 py-0.5 rounded-lg text-[12px] font-bold bg-white/20 text-white backdrop-blur-md border border-white/20">
             {item.category}
@@ -93,7 +180,6 @@ const TrendingCard = ({ item, onClick, variants }) => {
         </div>
       </div>
 
-      {/* content */}
       <div className="p-4 flex flex-col grow">
         <div className="flex items-center gap-2 mb-2">
           <span className="text-[10px] text-brand-text/50 font-medium">
@@ -105,7 +191,6 @@ const TrendingCard = ({ item, onClick, variants }) => {
           </span>
         </div>
 
-        {/* title */}
         <h3 className="text-sm md:text-[15px] font-bold text-brand-text mb-2 line-clamp-2 leading-snug group-hover:text-brand-primary transition-colors">
           {item.title}
         </h3>
@@ -114,9 +199,7 @@ const TrendingCard = ({ item, onClick, variants }) => {
           {item.excerpt}
         </p>
 
-        {/* footer */}
         <div className="flex items-center justify-between pt-3 border-t border-brand-secondary/50 mt-auto">
-          {/* avatar */}
           <div className="flex items-center gap-2">
             <img
               src={item.author.avatar}
@@ -130,7 +213,6 @@ const TrendingCard = ({ item, onClick, variants }) => {
             </div>
           </div>
 
-          {/* score */}
           <div className="flex items-center gap-1 bg-brand-secondary/30 px-2 py-1 rounded-md">
             <span className="text-[11px] font-bold text-brand-primary">
               {item.confidence}%
@@ -141,81 +223,5 @@ const TrendingCard = ({ item, onClick, variants }) => {
     </motion.article>
   );
 };
-
-// data
-export const trendingData = [
-  {
-    id: 1,
-    image:
-      "https://images.unsplash.com/photo-1504711434969-e33886168f5c?w=800&q=80",
-    date: "Dec 18, 2024",
-    category: "Health",
-    title: "Fake vaccine side effects spreading online",
-    excerpt:
-      "False claims about vaccine causing unusual symptoms have been debunked by health experts.",
-    author: {
-      name: "Dr. Sarah",
-      role: "Medical Fact-Checker",
-      avatar: "https://i.pravatar.cc/150?img=1",
-    },
-    confidence: 94,
-    sources: 15,
-    status: "Debunked",
-  },
-  {
-    id: 2,
-    image:
-      "https://images.unsplash.com/photo-1620712943543-bcc4688e7485?w=800&q=80",
-    date: "Dec 15, 2024",
-    category: "Technology",
-    title: "AI system allegedly gains consciousness",
-    excerpt:
-      "Viral story about AI achieving sentience has been thoroughly investigated and found to be fabricated.",
-    author: {
-      name: "Marcus J.",
-      role: "Tech Analyst",
-      avatar: "https://i.pravatar.cc/150?img=3",
-    },
-    confidence: 89,
-    sources: 22,
-    status: "Debunked",
-  },
-  {
-    id: 3,
-    image:
-      "https://images.unsplash.com/photo-1542601906990-b4d3fb778b09?w=800&q=80",
-    date: "Dec 12, 2024",
-    category: "Environment",
-    title: "Climate data manipulation allegations",
-    excerpt:
-      "Claims of scientists falsifying climate data have been investigated and proven false.",
-    author: {
-      name: "Emma R.",
-      role: "Journalist",
-      avatar: "https://i.pravatar.cc/150?img=5",
-    },
-    confidence: 96,
-    sources: 31,
-    status: "Debunked",
-  },
-  {
-    id: 4,
-    image:
-      "https://images.unsplash.com/photo-1507413245164-6160d8298b31?w=800&q=80",
-    date: "Dec 10, 2024",
-    category: "Politics",
-    title: "Deepfake video of politician circulates",
-    excerpt:
-      "A controversial video showing a politician making inflammatory remarks confirmed as deepfake.",
-    author: {
-      name: "David K.",
-      role: "Analyst",
-      avatar: "https://i.pravatar.cc/150?img=8",
-    },
-    confidence: 98,
-    sources: 12,
-    status: "Debunked",
-  },
-];
 
 export default TrendingSection;

@@ -15,13 +15,12 @@ const TrendingDetail = ({ item, onBack }) => {
       <div className="min-h-screen py-6 px-3 md:py-8 md:px-4">
         <div className="max-w-4xl mx-auto">
           
-          {/* Back Button */}
+          {/* back button */}
           <motion.button
             onClick={onBack}
             whileHover={{ x: -5, scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
-            // Ganti bg-brand-surface/60 dan border-brand-surface/60
-            className="mb-4 flex items-center gap-1.5 px-3 py-1.5 bg-brand-surface/60 backdrop-blur-xl rounded-full text-brand-text text-xs md:text-sm font-medium hover:bg-brand-secondary transition-all shadow-sm border border-brand-surface/60"
+            className="mb-4 flex items-center gap-1.5 px-3 py-1.5 bg-brand-surface/60 backdrop-blur-xl rounded-full text-brand-text text-xs md:text-sm font-medium hover:bg-brand-secondary transition-all shadow-sm border border-brand-surface/60 cursor-pointer"
           >
             <svg className="w-3.5 h-3.5 md:w-4 md:h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
@@ -29,15 +28,14 @@ const TrendingDetail = ({ item, onBack }) => {
             Back to Home
           </motion.button>
 
-          {/* Main Content Card */}
+          {/* main content card */}
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2 }}
-            // Ganti bg-brand-surface/70 dan border-brand-surface/60
             className="bg-brand-surface/70 backdrop-blur-2xl rounded-2xl md:rounded-4xl overflow-hidden shadow-2xl border border-brand-surface/60"
           >
-            {/* Header Section */}
+            {/* header */}
             <div className="p-4 md:p-8 border-b border-brand-secondary/50">
               <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-3 md:gap-4">
                 <div className="flex-1">
@@ -51,21 +49,28 @@ const TrendingDetail = ({ item, onBack }) => {
                   </div>
                 </div>
                 
-                <motion.button
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                  // Text-brand-surface (putih) pada button primary
-                  className="self-start px-4 py-1.5 md:px-5 md:py-2 bg-brand-primary text-brand-surface text-xs md:text-sm rounded-full font-semibold hover:shadow-lg transition-all"
-                >
-                  View Full Report →
-                </motion.button>
+                {item.url && (
+                  <motion.a
+                    href={item.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                    className="self-start px-4 py-1.5 md:px-5 md:py-2 bg-brand-primary text-brand-surface text-xs md:text-sm rounded-full font-semibold hover:shadow-lg transition-all cursor-pointer flex items-center gap-2 no-underline"
+                  >
+                    View Full Report
+                    <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                    </svg>
+                  </motion.a>
+                )}
               </div>
             </div>
 
-            {/* Content Grid */}
+            {/* content grid */}
             <div className="grid grid-cols-1 lg:grid-cols-5 gap-5 md:gap-6 p-4 md:p-8">
               
-              {/* Left Column - Image */}
+              {/* image */}
               <div className="lg:col-span-2">
                 <motion.div
                   initial={{ opacity: 0, scale: 0.95 }}
@@ -78,14 +83,11 @@ const TrendingDetail = ({ item, onBack }) => {
                     alt={item.title}
                     className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
                   />
-                  {/* Gradient menggunakan brand-text (hitam) */}
                   <div className="absolute inset-0 bg-linear-to-t from-brand-text/50 to-transparent" />
                   
-                  {/* Floating Status */}
-                  {/* Ganti bg-white/20 -> bg-brand-surface/20, border-white -> border-brand-surface */}
+                  {/* floating status */}
                   <div className="absolute bottom-2 left-2 right-2 md:bottom-3 md:left-3 md:right-3 bg-brand-surface/20 backdrop-blur-md border border-brand-surface/30 p-2 md:p-3 rounded-lg md:rounded-xl">
                     <p className="text-brand-surface text-[9px] md:text-[10px] font-bold uppercase tracking-wider mb-0.5">Current Status</p>
-                    {/* Menggunakan text-brand-secondary agar kontras di background gelap, alih-alih merah/hijau */}
                     <p className="text-base md:text-lg font-bold text-brand-secondary">
                       {item.status}
                     </p>
@@ -93,9 +95,9 @@ const TrendingDetail = ({ item, onBack }) => {
                 </motion.div>
               </div>
 
-              {/* Right Column - Details */}
+              {/* details */}
               <div className="lg:col-span-3 space-y-4 md:space-y-6">
-                {/* Title */}
+                {/* title */}
                 <motion.div
                   initial={{ opacity: 0, x: 20 }}
                   animate={{ opacity: 1, x: 0 }}
@@ -109,7 +111,7 @@ const TrendingDetail = ({ item, onBack }) => {
                   </p>
                 </motion.div>
 
-                {/* status */}
+                {/* status metrics */}
                 <motion.div
                   initial={{ opacity: 0, x: 20 }}
                   animate={{ opacity: 1, x: 0 }}
@@ -139,7 +141,7 @@ const TrendingDetail = ({ item, onBack }) => {
                   <img
                     src={item.author.avatar}
                     alt={item.author.name}
-                    className="w-10 h-10 md:w-12 md:h-12 rounded-full border-2 border-brand-surface shadow-md"
+                    className="w-10 h-10 md:w-12 md:h-12 rounded-full border-2 border-brand-surface shadow-md object-cover"
                   />
                   <div>
                     <p className="text-sm md:text-base font-bold text-brand-text">{item.author.name}</p>
@@ -149,12 +151,11 @@ const TrendingDetail = ({ item, onBack }) => {
               </div>
             </div>
 
-            {/* Detailed Analysis Section */}
-            {/* Ganti bg-white/30 -> bg-brand-surface/30 */}
+            {/* text content */}
             <div className="p-4 md:p-8 border-t border-brand-secondary/50 bg-brand-surface/30">
-              <h3 className="text-base md:text-lg font-bold text-brand-text mb-3">Detailed Analysis</h3>
+              <h3 className="text-base md:text-lg font-bold text-brand-text mb-3">Claim Analysis</h3>
               <p className="text-brand-text/80 leading-relaxed text-xs md:text-base">
-                {item.fullContent}
+                This claim originated from <strong>{item.author.name}</strong> and was reviewed on {item.date}. The consensus from fact-checkers is that this information is <strong>{item.status}</strong>. Please verify with official sources before sharing.
               </p>
             </div>
 
