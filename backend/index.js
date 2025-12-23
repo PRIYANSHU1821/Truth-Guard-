@@ -16,3 +16,7 @@ app.use("/api/analyze", analyzeRoutes);
 app.use("/api/trending", trendingRoutes); 
 
 app.listen(PORT, () => console.log(`🚀 WonderAI Server running on port ${PORT}`));
+
+app.get("/", (req, res) => {
+  res.send("🚀 WonderAI Backend is Running Successfully!");
+});
