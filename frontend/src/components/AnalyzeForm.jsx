@@ -10,12 +10,12 @@ const AnalyzeForm = () => {
   const [error, setError] = useState(null);
   const [mode, setMode] = useState("Text");
   const [showDropdown, setShowDropdown] = useState(false);
-  
+
   const [processTime, setProcessTime] = useState(null);
 
   const handleAnalyze = async () => {
     if (!inputText.trim()) return;
-    
+
     setLoading(true);
     setResult(null);
     setError(null);
@@ -26,20 +26,24 @@ const AnalyzeForm = () => {
 
     try {
       // call api
-      const response = await axios.post("http://localhost:5000/api/analyze", {
+      const API_URL = "https://wonder-ai-backend.vercel.app"; 
+
+      const response = await axios.post(`${API_URL}/api/analyze`, {
         text: inputText,
       });
-      
+
       // stop timer
       const endTime = performance.now();
-      const duration = ((endTime - startTime) / 1000).toFixed(2); 
-      
+      const duration = ((endTime - startTime) / 1000).toFixed(2);
+
       setProcessTime(duration);
       setResult(response.data);
-
     } catch (err) {
       console.error("Analysis Error:", err);
-      const errorMsg = err.response?.data?.detail || err.response?.data?.error || "We couldn't reach the server. Please try again later or ensure the backend is active.";
+      const errorMsg =
+        err.response?.data?.detail ||
+        err.response?.data?.error ||
+        "We couldn't reach the server. Please try again later or ensure the backend is active.";
       setError(errorMsg);
     } finally {
       setLoading(false);
@@ -64,8 +68,18 @@ const AnalyzeForm = () => {
               exit={{ opacity: 0, height: 0, marginBottom: 0 }}
               className="w-full bg-gray-100 border border-gray-300 p-3 rounded-2xl flex items-start gap-3 text-gray-600 overflow-hidden"
             >
-              <svg className="w-5 h-5 shrink-0 mt-0.5 text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+              <svg
+                className="w-5 h-5 shrink-0 mt-0.5 text-gray-500"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                />
               </svg>
               <p className="text-xs md:text-sm font-medium leading-relaxed">
                 {error}
@@ -77,12 +91,13 @@ const AnalyzeForm = () => {
           id="analyze-input"
           value={inputText}
           onChange={(e) => setInputText(e.target.value)}
-          placeholder={mode === "Text" ? "Paste text here..." : "Paste link here..."}
+          placeholder={
+            mode === "Text" ? "Paste text here..." : "Paste link here..."
+          }
           className="w-full h-24 md:h-36 bg-transparent outline-none text-sm md:text-base text-brand-text placeholder-gray-300 resize-none font-medium leading-relaxed p-2"
         />
 
         <div className="flex justify-between items-center mt-4 pt-4 border-t border-brand-secondary/50">
-          
           {/* dropdown mode */}
           <div className="relative">
             <motion.button
@@ -91,8 +106,16 @@ const AnalyzeForm = () => {
               className="flex items-center gap-1.5 bg-brand-secondary text-brand-primary px-3 py-1.5 md:px-5 md:py-2 rounded-full text-[11px] md:text-sm font-bold shadow-sm transition-all"
             >
               <motion.span animate={{ rotate: showDropdown ? 180 : 0 }}>
-                <svg className="w-3.5 h-3.5 md:w-4 md:h-4" fill="currentColor" viewBox="0 0 20 20">
-                  <path fillRule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clipRule="evenodd" />
+                <svg
+                  className="w-3.5 h-3.5 md:w-4 md:h-4"
+                  fill="currentColor"
+                  viewBox="0 0 20 20"
+                >
+                  <path
+                    fillRule="evenodd"
+                    d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+                    clipRule="evenodd"
+                  />
                 </svg>
               </motion.span>
               {mode}
@@ -110,17 +133,32 @@ const AnalyzeForm = () => {
                     {["Text", "Link"].map((item) => (
                       <button
                         key={item}
-                        onClick={() => { setMode(item); setShowDropdown(false); }}
+                        onClick={() => {
+                          setMode(item);
+                          setShowDropdown(false);
+                        }}
                         className={`px-4 py-2.5 md:py-3 text-[11px] md:text-sm font-medium text-left flex items-center justify-between transition-all ${
-                          mode === item 
-                            ? "bg-brand-primary text-white" 
+                          mode === item
+                            ? "bg-brand-primary text-white"
                             : "text-brand-text hover:bg-brand-secondary"
                         }`}
                       >
                         {item}
                         {mode === item && (
-                          <motion.svg initial={{ scale: 0 }} animate={{ scale: 1 }} className="w-3.5 h-3.5 md:w-4 md:h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
-                            <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                          <motion.svg
+                            initial={{ scale: 0 }}
+                            animate={{ scale: 1 }}
+                            className="w-3.5 h-3.5 md:w-4 md:h-4"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            stroke="currentColor"
+                            strokeWidth={3}
+                          >
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              d="M5 13l4 4L19 7"
+                            />
                           </motion.svg>
                         )}
                       </button>
@@ -134,13 +172,19 @@ const AnalyzeForm = () => {
           {/* analyze button */}
           <motion.button
             disabled={loading || !inputText}
-            whileHover={!(loading || !inputText) ? { scale: 1.05, brightness: 1.1 } : {}}
+            whileHover={
+              !(loading || !inputText) ? { scale: 1.05, brightness: 1.1 } : {}
+            }
             whileTap={!(loading || !inputText) ? { scale: 0.95 } : {}}
             onClick={handleAnalyze}
             className={`
               flex items-center gap-2 px-5 py-2 md:px-7 md:py-3 rounded-full text-[12px] md:text-sm font-bold text-white shadow-lg transition-all
               bg-brand-primary 
-              ${loading || !inputText ? 'opacity-60 cursor-not-allowed' : 'hover:shadow-brand-primary/40'}
+              ${
+                loading || !inputText
+                  ? "opacity-60 cursor-not-allowed"
+                  : "hover:shadow-brand-primary/40"
+              }
             `}
           >
             {loading ? (
@@ -151,7 +195,11 @@ const AnalyzeForm = () => {
             ) : (
               <>
                 Analyze With AI
-                <svg className="w-3.5 h-3.5 md:w-4 md:h-4" fill="currentColor" viewBox="0 0 24 24">
+                <svg
+                  className="w-3.5 h-3.5 md:w-4 md:h-4"
+                  fill="currentColor"
+                  viewBox="0 0 24 24"
+                >
                   <path d="M19 9l1.25-2.75L23 5l-2.75-1.25L19 1l-1.25 2.75L15 5l2.75 1.25L19 9zm-7.5.5L9 4 6.5 9.5 1 12l5.5 2.5L9 20l2.5-5.5L17 12l-5.5-2.5zM19 15l-1.25 2.75L15 19l2.75 1.25L19 23l1.25-2.75L23 19l-2.75-1.25L19 15z" />
                 </svg>
               </>
@@ -162,12 +210,8 @@ const AnalyzeForm = () => {
 
       {/* --- result section --- */}
       <AnimatePresence>
-
         {/* success state */}
-        {result && (
-          <ResultCard result={result} processTime={processTime} />
-        )}
-
+        {result && <ResultCard result={result} processTime={processTime} />}
       </AnimatePresence>
     </div>
   );

@@ -4,14 +4,18 @@ import axios from "axios";
 
 const enrichData = (rawData) => {
   const categoryImageMap = {
-    "Politics": "https://images.unsplash.com/photo-1607778417094-1fef13315e6e?q=80&w=1073&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-    "Health": "https://images.unsplash.com/photo-1535914254981-b5012eebbd15?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",   
-    "Tech": "https://itchronicles.com/wp-content/uploads/2021/01/technology-impact-on-life.jpg", 
-    "Science": "https://images.unsplash.com/photo-1507413245164-6160d8298b31?w=800&q=80", 
-    "Society": "https://images.unsplash.com/photo-1513682121497-80211f36a7d3?q=80&w=688&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D", 
+    Politics:
+      "https://images.unsplash.com/photo-1607778417094-1fef13315e6e?q=80&w=1073&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+    Health:
+      "https://images.unsplash.com/photo-1535914254981-b5012eebbd15?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+    Tech: "https://itchronicles.com/wp-content/uploads/2021/01/technology-impact-on-life.jpg",
+    Science:
+      "https://images.unsplash.com/photo-1507413245164-6160d8298b31?w=800&q=80",
+    Society:
+      "https://images.unsplash.com/photo-1513682121497-80211f36a7d3?q=80&w=688&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
   };
 
-  const categories = Object.keys(categoryImageMap); 
+  const categories = Object.keys(categoryImageMap);
   const roles = ["Fact-Checker", "Journalist", "Analyst", "Researcher"];
 
   return rawData.map((item, index) => {
@@ -27,7 +31,7 @@ const enrichData = (rawData) => {
       } else if (lower.includes("misleading")) {
         shortStatus = "Misleading";
       } else {
-        shortStatus = "See Report"; 
+        shortStatus = "See Report";
       }
     } else {
       shortStatus = shortStatus.replace(/\.$/, "");
@@ -38,19 +42,23 @@ const enrichData = (rawData) => {
     return {
       id: index,
       title: item.title || "No Title Available",
-      date: new Date(item.date).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" }),
-      
+      date: new Date(item.date).toLocaleDateString("en-US", {
+        month: "short",
+        day: "numeric",
+        year: "numeric",
+      }),
+
       status: shortStatus,
       fullStatus: originalStatus,
 
-      sourceName: item.source, 
+      sourceName: item.source,
       url: item.url,
       excerpt: `Claim by ${item.claimant}: "${item.title}". This claim has been reviewed by ${item.source}.`,
-      
-      image: categoryImageMap[assignedCategory], 
+
+      image: categoryImageMap[assignedCategory],
       category: assignedCategory,
-      
-      confidence: Math.floor(Math.random() * (99 - 85) + 85), 
+
+      confidence: Math.floor(Math.random() * (99 - 85) + 85),
       sources: Math.floor(Math.random() * (50 - 10) + 10),
       author: {
         name: item.source || "Unknown Source",
@@ -69,7 +77,9 @@ const TrendingSection = ({ onItemClick }) => {
   useEffect(() => {
     const fetchTrending = async () => {
       try {
-        const response = await axios.get("http://localhost:5000/api/trending");
+        const API_URL = "https://wonder-ai-backend.vercel.app"; 
+
+        const response = await axios.get(`${API_URL}/api/trending`);
         const enriched = enrichData(response.data);
         setTrendingData(enriched);
       } catch (err) {
@@ -116,7 +126,10 @@ const TrendingSection = ({ onItemClick }) => {
       {loading ? (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
           {[1, 2, 3, 4].map((i) => (
-            <div key={i} className="bg-white/40 h-80 rounded-2xl animate-pulse" />
+            <div
+              key={i}
+              className="bg-white/40 h-80 rounded-2xl animate-pulse"
+            />
           ))}
         </div>
       ) : error ? (
@@ -148,7 +161,7 @@ const TrendingCard = ({ item, onClick, variants }) => {
   return (
     <motion.article
       variants={variants}
-      whileHover={{ y: -5, scale: 1.01 }} 
+      whileHover={{ y: -5, scale: 1.01 }}
       whileTap={{ scale: 0.98 }}
       onClick={onClick}
       className="bg-brand-surface/60 backdrop-blur-xl rounded-2xl overflow-hidden shadow-md hover:shadow-xl transition-all duration-300 cursor-pointer border border-brand-surface/60 group flex flex-col h-full"
@@ -167,7 +180,7 @@ const TrendingCard = ({ item, onClick, variants }) => {
         <div className="absolute top-2 right-2 max-w-30">
           <span
             className="block truncate px-2 py-0.5 rounded-full md:text-[11px] text-[12px] font-bold text-brand-primary backdrop-blur-md border border-brand-primary/20 bg-brand-bg-end"
-            title={item.fullStatus} 
+            title={item.fullStatus}
           >
             {item.status}
           </span>
