@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import axios from "axios";
 import ResultCard from "./ResultCard";
@@ -12,6 +12,18 @@ const AnalyzeForm = () => {
   const [showDropdown, setShowDropdown] = useState(false);
 
   const [processTime, setProcessTime] = useState(null);
+  const resultRef = useRef(null);
+
+  useEffect(() => {
+    if (result && resultRef.current) {
+      setTimeout(() => {
+        resultRef.current.scrollIntoView({ 
+          behavior: "smooth", 
+          block: "start" 
+        });
+      }, 100);
+    }
+  }, [result]);
 
   const handleAnalyze = async () => {
     if (!inputText.trim()) return;
@@ -211,7 +223,11 @@ const AnalyzeForm = () => {
       {/* --- result section --- */}
       <AnimatePresence>
         {/* success state */}
-        {result && <ResultCard result={result} processTime={processTime} />}
+        {result && (
+          <div ref={resultRef} className="w-full scroll-mt-24"> 
+             <ResultCard result={result} processTime={processTime} />
+          </div>
+        )}
       </AnimatePresence>
     </div>
   );
