@@ -1,7 +1,7 @@
 <div align="center">
-  <img src="./src/assets/wonder-logo.png" alt="WonderAI Logo" width="100" />
+  <img src="./rontend/src/assets/wonder-logo.png" alt="WonderAI Logo" width="100" />
   <br/>
-  <img src="./src/assets/preview.png" alt="Project Screenshot" width="100%" />
+  <img src="./rontend/src/assets/preview.png" alt="Project Screenshot" width="100%" />
 </div>
 
 # 🛡️ WonderAI
