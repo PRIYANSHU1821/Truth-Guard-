@@ -1,4 +1,16 @@
 {
+  "name": "octopus-hackathon-backend",
+  "version": "1.0.0",
+  "description": "Backend for VeriScope",
+  "main": "index.js",
+  "type": "module", 
+  "scripts": {
+    "start": "node index.js",
+    "dev": "node index.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
   "dependencies": {
     "@google/generative-ai": "^0.24.1",
     "axios": "^1.13.2",

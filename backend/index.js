@@ -12,8 +12,7 @@ const PORT = process.env.PORT || 5000;
 app.use(cors());
 app.use(express.json());
 
-// Routes Utama
 app.use("/api/analyze", analyzeRoutes);   
 app.use("/api/trending", trendingRoutes); 
 
-app.listen(PORT, () => console.log(`🚀 VeriScope Server running on port ${PORT}`));
+app.listen(PORT, () => console.log(`🚀 WonderAI Server running on port ${PORT}`));
