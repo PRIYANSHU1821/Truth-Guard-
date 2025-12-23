@@ -1,8 +1,6 @@
 ![WonderAI App Preview](./frontend/src/assets/preview.png)
 
-# <img src="./frontend/src/assets/wonder-logo.png" alt="WonderAI Logo" width="45" height="45" /> WonderAI
-
-**WonderAI** is an intelligent web-based platform designed to detect misinformation and analyze news credibility using advanced Artificial Intelligence.
+# <img src="./frontend/src/assets/wonder-logo.png" alt="WonderAI Logo" width="43" height="43" /> WonderAI
 
 **WonderAI** is an intelligent web-based platform designed to detect misinformation and analyze news credibility using advanced Artificial Intelligence.
 
