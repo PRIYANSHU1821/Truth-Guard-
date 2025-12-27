@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import React from "react";
 import Navbar from "./components/Navbar";
 import AnalyzeForm from "./components/AnalyzeForm";
@@ -10,17 +10,97 @@ import About from "./components/About";
 import Footer from "./components/Footer";
 import ScrollToTop from "./components/ScrollToTop";
 import Guidelines from "./components/Guidelines";
+import logoImg from "./assets/wonder-logo.png";
 import { motion, AnimatePresence } from "framer-motion";
 
 function App() {
   const [selectedTrend, setSelectedTrend] = useState(null);
   const [showGuidelines, setShowGuidelines] = useState(false);
+  const [isSplashing, setIsSplashing] = useState(true);
+
+  useEffect(() => {
+    const audio = new Audio("/splash-sound.mp3"); 
+    audio.volume = 0.5;
+    
+    audio.play().catch((err) => {
+      console.log("Autoplay sound blocked or file not found:", err);
+    });
+
+    const timer = setTimeout(() => {
+      setIsSplashing(false);
+    }, 3000);
+
+    return () => clearTimeout(timer);
+  }, []);
 
   return (
     <div className="relative min-h-screen w-full flex flex-col items-center px-4 overflow-hidden pt-24">
+      
+      {/* --- splash screen animation --- */}
+      <AnimatePresence>
+  {isSplashing && (
+    <motion.div
+      key="splash"
+      initial={{ opacity: 1 }}
+      exit={{ 
+        opacity: 0,
+        transition: { duration: 0.6, ease: "circOut" } 
+      }}
+      animate={{ 
+        background: [
+          "linear-gradient(to bottom, #81A1E0, #C3D7F6, #F0F6FF)",
+          "linear-gradient(to bottom, #C3D7F6, #F0F6FF, #81A1E0)",
+          "linear-gradient(to bottom, #81A1E0, #C3D7F6, #F0F6FF)"
+        ]
+      }}
+      transition={{ 
+        background: { duration: 3, repeat: Infinity, ease: "linear" } 
+      }}
+      className="fixed inset-0 z-200 flex items-center justify-center"
+    >
+      <div className="relative flex flex-col items-center">
+        <motion.img
+          layoutId="wonder-logo-shared"
+          src={logoImg}
+          alt="WonderAI Logo"
+          className="w-28 h-28 md:w-36 md:h-36 object-contain"
+          initial={{ scale: 0.5, opacity: 1 }} 
+          animate={{ scale: 1 }}
+          transition={{ 
+            type: "spring",
+            stiffness: 260,
+            damping: 20,    
+            layout: { duration: 0.8, ease: [0.16, 1, 0.3, 1] } 
+          }}
+        />
+        
+        <motion.div
+          initial={{ opacity: 0, y: 15 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.4, duration: 0.6 }}
+          className="mt-6 flex flex-col items-center"
+        >
+          <h2 className="text-2xl md:text-3xl font-extrabold text-white tracking-[0.3em] drop-shadow-md">
+            WONDER AI
+          </h2>
+          
+          <div className="mt-4 w-16 h-1 bg-white/30 rounded-full overflow-hidden">
+             <motion.div 
+               initial={{ x: "-100%" }}
+               animate={{ x: "100%" }}
+               transition={{ repeat: Infinity, duration: 1.2, ease: "easeInOut" }}
+               className="w-full h-full bg-brand-primary shadow-[0_0_8px_#fff]"
+             />
+          </div>
+        </motion.div>
+      </div>
+    </motion.div>
+  )}
+</AnimatePresence>
+
       {/* --- background --- */}
       <div className="absolute bottom-0 left-0 w-72 h-72 bg-brand-bgStart rounded-full blur-3xl opacity-40 -z-10"></div>
-      {!selectedTrend && <Navbar />}
+      {!selectedTrend && <Navbar isSplashing={isSplashing} />}
 
       {/* --- scroll to top --- */}
       {!selectedTrend && <ScrollToTop />}
