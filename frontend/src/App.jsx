@@ -7,10 +7,9 @@ import TrendingDetail from "./pages/TrendingDetail";
 import HowItWorks from "./components/HowItWorks";
 import Disclaimer from "./components/Disclaimer";
 import About from "./components/About";
-import Footer from "./components/Footer";
 import ScrollToTop from "./components/ScrollToTop";
 import Guidelines from "./components/Guidelines";
-import logoImg from "./assets/wonder-logo.png";
+import logoImg from "./assets/truthguard-logo.png";
 import { motion, AnimatePresence } from "framer-motion";
 
 function App() {
@@ -60,9 +59,9 @@ function App() {
     >
       <div className="relative flex flex-col items-center">
         <motion.img
-          layoutId="wonder-logo-shared"
+          layoutId="truthguard-logo-shared"
           src={logoImg}
-          alt="WonderAI Logo"
+          alt="TruthGuard Logo"
           className="w-28 h-28 md:w-36 md:h-36 object-contain"
           initial={{ scale: 0.5, opacity: 1 }} 
           animate={{ scale: 1 }}
@@ -81,7 +80,7 @@ function App() {
           className="mt-6 flex flex-col items-center"
         >
           <h2 className="text-2xl md:text-3xl font-extrabold text-white tracking-[0.3em] drop-shadow-md">
-            WONDER AI
+            TRUTHGUARD
           </h2>
           
           <div className="mt-4 w-16 h-1 bg-white/30 rounded-full overflow-hidden">
@@ -145,7 +144,7 @@ function App() {
               transition={{ delay: 0.1 }}
               className="text-[29px] md:text-4xl lg:text-5xl font-bold text-brand-text leading-tight mb-12 text-center"
             >
-              With Wonder AI
+              With TruthGuard
             </motion.h1>
 
             {/* --- main content --- */}
@@ -172,9 +171,6 @@ function App() {
             <section className="w-full z-10">
               <About />
             </section>
-
-            {/* --- footer section --- */}
-            <Footer />
           </motion.div>
         )}
       </AnimatePresence>

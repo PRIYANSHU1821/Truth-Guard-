@@ -74,7 +74,7 @@ const Disclaimer = ({ onReadGuidelines }) => {
                 AI Limitations
               </h3>
               <p className="text-[12px] md:text-sm text-brand-text/70 leading-relaxed text-justify">
-                WonderAI utilizes advanced Artificial Intelligence (LLMs) to
+                TruthGuard utilizes advanced Artificial Intelligence (LLMs) to
                 analyze patterns. While highly accurate,{" "}
                 <strong>AI models can occasionally hallucinate</strong> or
                 misinterpret context. Results should be used as a reference, not

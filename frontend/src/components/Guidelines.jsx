@@ -11,7 +11,7 @@ const Guidelines = ({ onClose }) => {
     doc.setFont("helvetica", "bold");
     doc.setFontSize(22);
     doc.setTextColor(40, 40, 40);
-    doc.text("WonderAI: Transparency & Ethics", 20, 20);
+    doc.text("TruthGuard: Transparency & Ethics", 20, 20);
 
     // version line
     doc.setFontSize(10);
@@ -26,11 +26,11 @@ const Guidelines = ({ onClose }) => {
     let yPos = 45;
 
     const sections = [
-      { t: "1. Visi Kami (Our Vision)", b: "WonderAI acts as a digital shield. We combine AI with global fact-checking networks to restore trust in information." },
-      { t: "2. Cara Analisis (How it Works)", b: "Paste text or URL. Our engine analyzes claims, fallacies, and logic. Results provide a Confidence Score and Verdict." },
-      { t: "3. Batasan AI (Limitations)", b: "AI models can hallucinate. Results are for reference only, not absolute truth. Always verify critical info manually." },
-      { t: "4. Privasi (Privacy)", b: "We do NOT store your input text personally. Processing is real-time and ephemeral for your safety." },
-      { t: "5. Tanggung Jawab (Responsibility)", b: "'Trust, but Verify.' Users are responsible for sharing information. Please cross-reference with official sources." }
+      { t: "1. Our Vision", b: "TruthGuard acts as a digital shield. We combine AI with global fact-checking networks to restore trust in information." },
+      { t: "2. How it Works", b: "Paste text or URL. Our engine analyzes claims, fallacies, and logic. Results provide a Confidence Score and Verdict." },
+      { t: "3. AI Limitations", b: "AI models can hallucinate. Results are for reference only, not absolute truth. Always verify critical info manually." },
+      { t: "4. Privacy Policy", b: "We do NOT store your input text personally. Processing is real-time and ephemeral for your safety." },
+      { t: "5. User Responsibility", b: "'Trust, but Verify.' Users are responsible for sharing information. Please cross-reference with official sources." }
     ];
 
     sections.forEach((sec) => {
@@ -43,7 +43,7 @@ const Guidelines = ({ onClose }) => {
       yPos += (splitText.length * 6) + 10;
     });
 
-    doc.save("WonderAI_Guidelines.pdf");
+    doc.save("TruthGuard_Guidelines.pdf");
   };
 
   return (
@@ -70,7 +70,7 @@ const Guidelines = ({ onClose }) => {
         </div>
 
         <div className="p-6 overflow-y-auto space-y-4">
-          <p className="font-medium">Welcome to WonderAI. Please read our guidelines:</p>
+          <p className="font-medium">Welcome to TruthGuard. Please read our guidelines:</p>
           <ul className="space-y-3 list-disc pl-5 text-sm text-gray-700">
             <li><strong>AI Limitations:</strong> AI may hallucinate. Use as a second opinion.</li>
             <li><strong>Data Privacy:</strong> We process data in real-time and do not store inputs.</li>

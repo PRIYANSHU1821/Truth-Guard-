@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion"; 
-import logoImg from "../assets/wonder-logo.png";
+import logoImg from "../assets/truthguard-logo.png";
 
 const Navbar = ({ isSplashing }) => {
   const [isOpen, setIsOpen] = useState(false);
@@ -124,9 +124,9 @@ const Navbar = ({ isSplashing }) => {
               className="flex items-center gap-2 text-lg font-semibold tracking-tight text-brand-text transition-transform duration-200 hover:scale-[1.04] active:scale-95"
             >
               <motion.img 
-              layoutId="wonder-logo-shared"
+              layoutId="truthguard-logo-shared"
               src={logoImg} 
-              alt="WonderAI Logo" 
+              alt="TruthGuard Logo" 
               className="w-8 h-8 object-contain"
               transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
             />
@@ -136,7 +136,7 @@ const Navbar = ({ isSplashing }) => {
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ delay: 0.2 }}
               >
-                WonderAI
+                TruthGuard
               </motion.span>
             )}
             </a>

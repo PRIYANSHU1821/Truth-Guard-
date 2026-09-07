@@ -169,7 +169,7 @@ const HowItWorks = () => {
               Powered by <span className="text-brand-primary">Advanced AI</span>
             </h3>
             <p className="text-[12px] md:text-base text-brand-text/80 leading-relaxed mb-6 text-justify">
-              Wonder AI leverages the reasoning capabilities of{" "}
+              TruthGuard leverages the reasoning capabilities of{" "}
               <strong>Google Gemini Pro</strong> combined with real-time
               verification from <strong>Google Fact Check Tools API</strong>.
             </p>

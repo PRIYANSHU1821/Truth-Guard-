@@ -1,18 +1,137 @@
 import { GoogleGenerativeAI } from "@google/generative-ai";
+import axios from "axios";
 import dotenv from "dotenv";
 
 dotenv.config();
 
+// Initialize Gemini SDK client
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
 
 const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
+// Helper function to extract and parse JSON from LLM responses
+const parseJsonResponse = (textResponse) => {
+  const jsonMatch = textResponse.match(/\{[\s\S]*\}/);
+  if (!jsonMatch) {
+    throw new Error("Invalid JSON format returned by the AI");
+  }
+  return JSON.parse(jsonMatch[0]);
+};
+
+// Provider 1: Google Gemini (Supports Google Search Grounding for real-time news!)
+const callGemini = async (prompt) => {
+  if (!process.env.GEMINI_API_KEY || process.env.GEMINI_API_KEY.includes("your_")) {
+    throw new Error("Gemini API key is not configured.");
+  }
+  
+  const model = genAI.getGenerativeModel({
+    model: "gemini-1.5-flash",
+    // Enable Google Search tool to fetch live real-time information for news checking!
+    tools: [{ googleSearch: {} }]
+  });
+
+  const result = await model.generateContent(prompt);
+  const response = await result.response;
+  return response.text();
+};
+
+// Provider 2: Groq API (Fallback)
+const callGroq = async (prompt) => {
+  const apiKey = (process.env.GROQ_API_KEY || "").replace(/"/g, "").trim();
+  if (!apiKey || apiKey.includes("your_")) {
+    throw new Error("Groq API key is not configured.");
+  }
+
+  const response = await axios.post(
+    "https://api.groq.com/openai/v1/chat/completions",
+    {
+      model: "llama3-70b-8192",
+      messages: [{ role: "user", content: prompt }],
+      response_format: { type: "json_object" }
+    },
+    {
+      headers: {
+        "Authorization": `Bearer ${apiKey}`,
+        "Content-Type": "application/json"
+      },
+      timeout: 12000 // 12 second timeout
+    }
+  );
+
+  return response.data.choices[0].message.content;
+};
+
+// Provider 3: OpenRouter API (Second Fallback)
+const callOpenRouter = async (prompt) => {
+  const apiKey = (process.env.OPENROUTER_API_KEY || "").replace(/"/g, "").trim();
+  if (!apiKey || apiKey.includes("your_")) {
+    throw new Error("OpenRouter API key is not configured.");
+  }
+
+  const response = await axios.post(
+    "https://openrouter.ai/api/v1/chat/completions",
+    {
+      model: "meta-llama/llama-3.3-70b-instruct", // Verified working OpenRouter model
+      messages: [{ role: "user", content: prompt }]
+    },
+    {
+      headers: {
+        "Authorization": `Bearer ${apiKey}`,
+        "Content-Type": "application/json",
+        "HTTP-Referer": "https://github.com/fatiya17/ai-misinformation-detector",
+        "X-Title": "TruthGuard Misinformation Detector"
+      },
+      timeout: 12000 // 12 second timeout
+    }
+  );
+
+  return response.data.choices[0].message.content;
+};
+
+// Helper to search real-time fact checks using Google Fact Check Tools API
+const fetchFactCheckContext = async (query) => {
+  try {
+    const googleKey = process.env.GOOGLE_API_KEY;
+    if (!googleKey || googleKey.includes("your_")) {
+      return "No valid GOOGLE_API_KEY configured for search grounding.";
+    }
+
+    const response = await axios.get(
+      "https://factchecktools.googleapis.com/v1alpha1/claims:search",
+      {
+        params: {
+          key: googleKey,
+          query: query,
+          languageCode: "en",
+          pageSize: 5
+        },
+        timeout: 5000
+      }
+    );
+
+    const claims = response.data.claims || [];
+    if (claims.length === 0) {
+      return "No matching fact checks found on Google Fact Check Tools API for this claim/query.";
+    }
+
+    return claims
+      .map((item, index) => {
+        const review = item.claimReview?.[0] || {};
+        return `${index + 1}. Claim: "${item.text}" by ${item.claimant || "Unknown"}\n   Verdict: ${review.textualRating || "Unverified"}\n   Publisher: ${review.publisher?.name || "Unknown"}\n   URL: ${review.url || "N/A"}`;
+      })
+      .join("\n\n");
+  } catch (err) {
+    console.warn(`⚠️ Failed to fetch fact check context: ${err.message}`);
+    return "Could not retrieve real-time fact check context due to API error/restrictions.";
+  }
+};
+
 export const analyzeText = async (req, res) => {
   const { text } = req.body;
 
-  if (!text) return res.status(400).json({ error: "Text or Link is required" });
-
-  const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash" });
+  if (!text) {
+    return res.status(400).json({ error: "Text or Link is required" });
+  }
 
   const prompt = `
     Act as VeriScope, an intelligent misinformation detection assistant.
@@ -37,47 +156,132 @@ export const analyzeText = async (req, res) => {
     }
   `;
 
-  // --- auto retry (max 3x) ---
-  let attempts = 0;
-  const maxAttempts = 3;
-
-  while (attempts < maxAttempts) {
+  // Pipeline Attempt Chain: Gemini (with search) -> Groq (Llama) -> OpenRouter
+  try {
+    console.log("⚡ Attempting verification with Gemini API (Google Search Grounding)...");
+    const rawResponse = await callGemini(prompt);
+    const resultJson = parseJsonResponse(rawResponse);
+    console.log("✅ Success using Gemini!");
+    return res.json(resultJson);
+  } catch (geminiError) {
+    console.warn(`⚠️ Gemini API failed: ${geminiError.message}`);
+    
+    // Fetch live fact-check data to ground the fallback models
+    console.log("🔍 Fetching live fact-check context for fallback models...");
+    let factCheckContext = "";
     try {
-      attempts++;
+      factCheckContext = await fetchFactCheckContext(text);
+      console.log("ℹ️ Live fact-check context fetched successfully.");
+    } catch (contextError) {
+      console.warn(`⚠️ Error fetching fact-check context: ${contextError.message}`);
+      factCheckContext = "Could not retrieve real-time fact check context.";
+    }
+
+    const fallbackPrompt = `
+      ${prompt}
       
-      const result = await model.generateContent(prompt);
-      const response = await result.response;
-      let textResponse = response.text();
+      ======================================================
+      ADDITIONAL REAL-TIME CONTEXT (Ground your analysis here):
+      We queried the Google Fact Check Tools API for the user's input/query and found the following reviews:
+      ---
+      ${factCheckContext}
+      ---
+      Please incorporate this real-time fact-check context into your analysis. Even if your internal knowledge is outdated, prioritize the fact-check context above to formulate the correct "label" and "explanation".
+      ======================================================
+    `;
 
-      const jsonMatch = textResponse.match(/\{[\s\S]*\}/);
-      if (!jsonMatch) throw new Error("Invalid JSON format returned by the AI");
+    // Check if Gemini failed due to quota/rate limits
+    try {
+      console.log("⚡ Falling back: Attempting verification with Groq API (Llama 3.3)...");
+      const rawResponse = await callGroq(fallbackPrompt);
+      const resultJson = parseJsonResponse(rawResponse);
+      console.log("✅ Success using Groq!");
+      return res.json(resultJson);
+    } catch (groqError) {
+      console.warn(`⚠️ Groq API failed: ${groqError.message}`);
 
-      const jsonResponse = JSON.parse(jsonMatch[0]);
+      try {
+        console.log("⚡ Falling back: Attempting verification with OpenRouter API...");
+        const rawResponse = await callOpenRouter(fallbackPrompt);
+        const resultJson = parseJsonResponse(rawResponse);
+        console.log("✅ Success using OpenRouter!");
+        return res.json(resultJson);
+      } catch (openRouterError) {
+        console.error(`❌ All AI providers failed. OpenRouter error: ${openRouterError.message}`);
 
-      return res.json(jsonResponse);
-
-    } catch (error) {
-      console.error(`⚠️ Attempt #${attempts} Error: ${error.message}`);
-
-      // --- limit ---
-      if (error.message.includes("429") || error.message.includes("Quota") || error.message.includes("resource has been exhausted")) {
-        return res.status(429).json({
-          error: "Usage Limit Reached",
-          detail: "Daily AI limit reached. We’re currently experiencing high demand. Please try again later or contact support. Thank you for visiting.𖹭"
+        return res.status(500).json({
+          error: "Service Temporarily Unavailable",
+          detail: "All AI analysis services are currently busy or out of quota. Please try again in a few moments."
         });
       }
-
-      // retry logic untuk error (503/Overloaded)
-      const isOverloaded = error.message.includes("503") || error.message.includes("Overloaded");
-      if (attempts < maxAttempts && isOverloaded) {
-        await sleep(2000); 
-        continue; 
-      }
-
-      return res.status(500).json({
-        error: "Server Error",
-        detail: "AI Service is temporarily unavailable. Please try again.",
-      });
     }
+  }
+};
+
+export const analyzeImage = async (req, res) => {
+  const { image, mimeType = "image/jpeg", cropBox } = req.body;
+
+  if (!image) {
+    return res.status(400).json({ error: "Image data (base64) is required" });
+  }
+
+  // Clean base64 string if data URL prefix exists
+  const base64Data = image.replace(/^data:image\/\w+;base64,/, "");
+
+  const cropInfoText = cropBox
+    ? `(Focus specifically on the cropped ROI bounding box: x=${cropBox.x}, y=${cropBox.y}, w=${cropBox.width}, h=${cropBox.height})`
+    : "";
+
+  const prompt = `
+    Act as TruthGuard Lens, an advanced Google Lens-like Optical Character Recognition (OCR) and Misinformation Detection Assistant. ${cropInfoText}
+
+    Your Tasks:
+    1. **OCR Extraction**: Extract ALL readable text, headlines, claims, quote text, or overlay text in the image/snippet accurately.
+    2. **Verification & Fact Checking**: Verify the extracted claims against live sources using Google Search grounding. Determine whether it is genuine news or fake/misinformation.
+    3. **Detect Language**: Identify the primary language of the text in the image.
+    4. **Output**: Return strictly valid JSON format.
+    5. **Language Consistency**: The "label" and "explanation" MUST be translated into the SAME LANGUAGE as the extracted text.
+
+    JSON OUTPUT FORMAT (Pure JSON object, no Markdown code blocks):
+    {
+      "extractedText": "Exact text extracted from the scanned area",
+      "label": "Classify into one of: 'Likely Misinformation', 'Questionable / Unverified', 'Likely Factual', 'Satire / Opinion'",
+      "confidence": (float between 0.0 - 1.0),
+      "explanation": "Concise explanation (max 3 sentences) verifying the claim in the SAME LANGUAGE as the image text."
+    }
+  `;
+
+  try {
+    console.log("⚡ Attempting image OCR & fake news analysis with Gemini 2.0 Vision...");
+    
+    if (!process.env.GEMINI_API_KEY || process.env.GEMINI_API_KEY.includes("your_")) {
+      throw new Error("Gemini API key is not configured.");
+    }
+
+    const model = genAI.getGenerativeModel({
+      model: "gemini-2.0-flash",
+      tools: [{ googleSearch: {} }]
+    });
+
+    const imagePart = {
+      inlineData: {
+        data: base64Data,
+        mimeType: mimeType
+      }
+    };
+
+    const result = await model.generateContent([prompt, imagePart]);
+    const response = await result.response;
+    const rawText = response.text();
+    const resultJson = parseJsonResponse(rawText);
+
+    console.log("✅ Success using Gemini 2.0 Vision OCR!");
+    return res.json(resultJson);
+  } catch (geminiError) {
+    console.warn(`⚠️ Gemini Vision API failed: ${geminiError.message}`);
+    return res.status(500).json({
+      error: "Image Processing Failed",
+      detail: geminiError.message || "Could not extract OCR text or verify image with AI vision."
+    });
   }
 };

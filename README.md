@@ -1,14 +1,14 @@
-![WonderAI App Preview](./frontend/src/assets/preview.png)
+![TruthGuard App Preview](./frontend/src/assets/preview.png)
 
-# <img src="./frontend/src/assets/wonder-logo.png" alt="WonderAI Logo" width="43" height="43" /> WonderAI
+# <img src="./frontend/src/assets/truthguard-logo.png" alt="TruthGuard Logo" width="43" height="43" /> TruthGuard
 
-**WonderAI** is an intelligent web-based platform designed to detect misinformation and analyze news credibility using advanced Artificial Intelligence.
+**TruthGuard** is an intelligent web-based platform designed to detect misinformation and analyze news credibility using advanced Artificial Intelligence.
 
 This project was built specifically for the **Octopus Hackathon (Global AI Hackathon)** with the mission of creating a digital shield against the spread of hoaxes and fake news in the digital age.
 
 ## 📖 About The Project
 
-In the modern digital era, information spreads faster than it can be verified. WonderAI bridges this gap by leveraging Generative AI and global fact-checking databases. The system Wonder AI Server provides users with:
+In the modern digital era, information spreads faster than it can be verified. TruthGuard bridges this gap by leveraging Generative AI and global fact-checking databases. The TruthGuard system provides users with:
 
 1. **Real-time AI Analysis:** Instantly analyzes text or URLs to detect logical fallacies, sarcasm, and potential misinformation patterns.
 2. **Global Trending Insights:** Monitors and displays trending hoaxes that have been debunked by international fact-checking organizations.
@@ -63,7 +63,7 @@ npm install
 
 
 2. **Configure Environment Variables:**
-Create a `.env` file in the root folder and add the following keys:
+Create a `.env` file in the `backend` folder and add the following keys:
 ```env
 PORT=5000
 GEMINI_API_KEY=Your_Google_Gemini_API_Key
@@ -93,7 +93,7 @@ npm install
 
 
 2. **Configure API Endpoint (Optional):**
-By default, the code points to the production backend (`https://wonder-ai-backend.vercel.app`). To use your local backend, update the URL in `src/components/AnalyzeForm.jsx` and `src/components/TrendingSection.jsx`:
+By default, the code points to the production backend (`https://truthguard-backend.vercel.app`). To use your local backend, update the URL in `src/components/AnalyzeForm.jsx` and `src/components/TrendingSection.jsx`:
 ```javascript
 // Change to:
 const API_URL = "http://localhost:5000";
@@ -139,10 +139,10 @@ npm run dev
 
 ## ⚠️ Disclaimer
 
-**WonderAI** utilizes advanced Large Language Model (LLM) technology, which, while powerful, is not infallible.
+**TruthGuard** utilizes advanced Large Language Model (LLM) technology, which, while powerful, is not infallible.
 
 * **AI Hallucinations:** The AI model may occasionally misinterpret context or produce inaccurate results.
-* **Manual Verification:** Results from WonderAI should be treated as a "Second Opinion" or initial screening tool, not absolute truth.
+* **Manual Verification:** Results from TruthGuard should be treated as a "Second Opinion" or initial screening tool, not absolute truth.
 * **User Responsibility:** We strongly encourage users to cross-reference critical information (Health, Politics, Safety) with official government sources or credible news outlets.
 * **Privacy:** We employ a "Zero Storage Policy." User input text is processed in real-time and is never permanently stored on our servers.
 
@@ -159,4 +159,4 @@ This project is Open Source, created for educational purposes and the Octopus Ha
 
 ---
 
-*© 2025 WonderAI Project. All Rights Reserved.*
+*© 2025 TruthGuard Project. All Rights Reserved.*

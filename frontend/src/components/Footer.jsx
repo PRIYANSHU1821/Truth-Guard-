@@ -38,7 +38,7 @@ const Footer = () => {
               onClick={(e) => handleScroll(e, "home")}
               className="text-2xl font-bold text-brand-text mb-2 tracking-tight hover:text-brand-primary transition-colors"
             >
-              WonderAI
+              TruthGuard
             </a>
             <p className="text-xs md:text-sm text-brand-text/70 leading-relaxed font-medium">
               Empowering the digital world with ethical AI analysis to fight misinformation and restore trust.
@@ -100,7 +100,7 @@ const Footer = () => {
         {/* bottom */}
         <div className="mt-8 pt-6 border-t border-brand-text/10 flex flex-col md:flex-row justify-between items-center gap-3 text-center md:text-left">
           <p className="text-[10px] md:text-xs text-brand-text/60 font-medium">
-            © 2025 Wonder AI. All rights reserved.
+            © 2025 TruthGuard. All rights reserved.
           </p>
           <p className="text-[10px] text-brand-text/50 font-medium">
             Designed for Global AI Hackathon.

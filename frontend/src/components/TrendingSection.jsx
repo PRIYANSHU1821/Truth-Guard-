@@ -2,6 +2,8 @@ import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import axios from "axios";
 
+const API_URL = import.meta.env.VITE_API_URL || "http://localhost:5000";
+
 const enrichData = (rawData) => {
   const categoryImageMap = {
     Politics:
@@ -77,8 +79,6 @@ const TrendingSection = ({ onItemClick }) => {
   useEffect(() => {
     const fetchTrending = async () => {
       try {
-        const API_URL = "https://wonder-ai-backend.vercel.app"; 
-
         const response = await axios.get(`${API_URL}/api/trending`);
         const enriched = enrichData(response.data);
         setTrendingData(enriched);
