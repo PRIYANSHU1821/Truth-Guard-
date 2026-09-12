@@ -229,7 +229,7 @@ export const analyzeImage = async (req, res) => {
   const base64Data = image.replace(/^data:image\/\w+;base64,/, "");
 
   const cropInfoText = cropBox
-    ? `(Focus specifically on the cropped ROI bounding box: x=${cropBox.x}, y=${cropBox.y}, w=${cropBox.width}, h=${cropBox.height})`
+    ? `(Focus specifically on the cropped ROI bounding box area)`
     : "";
 
   const prompt = `
@@ -237,7 +237,7 @@ export const analyzeImage = async (req, res) => {
 
     Your Tasks:
     1. **OCR Extraction**: Extract ALL readable text, headlines, claims, quote text, or overlay text in the image/snippet accurately.
-    2. **Verification & Fact Checking**: Verify the extracted claims against live sources using Google Search grounding. Determine whether it is genuine news or fake/misinformation.
+    2. **Verification & Fact Checking**: Verify the extracted claims against reliable facts and determine whether it is genuine news, satire, unverified, or misinformation.
     3. **Detect Language**: Identify the primary language of the text in the image.
     4. **Output**: Return strictly valid JSON format.
     5. **Language Consistency**: The "label" and "explanation" MUST be translated into the SAME LANGUAGE as the extracted text.
@@ -246,42 +246,88 @@ export const analyzeImage = async (req, res) => {
     {
       "extractedText": "Exact text extracted from the scanned area",
       "label": "Classify into one of: 'Likely Misinformation', 'Questionable / Unverified', 'Likely Factual', 'Satire / Opinion'",
-      "confidence": (float between 0.0 - 1.0),
+      "confidence": 0.95,
       "explanation": "Concise explanation (max 3 sentences) verifying the claim in the SAME LANGUAGE as the image text."
     }
   `;
 
+  // Attempt 1: Gemini Direct API with models gemini-2.5-flash / gemini-1.5-flash
+  const geminiModels = ["gemini-2.5-flash", "gemini-1.5-flash", "gemini-2.5-pro"];
+
+  if (process.env.GEMINI_API_KEY && !process.env.GEMINI_API_KEY.includes("your_")) {
+    for (const modelName of geminiModels) {
+      try {
+        console.log(`⚡ Attempting image OCR analysis with Gemini (${modelName})...`);
+        const model = genAI.getGenerativeModel({ model: modelName });
+        const imagePart = {
+          inlineData: {
+            data: base64Data,
+            mimeType: mimeType
+          }
+        };
+
+        const result = await model.generateContent([prompt, imagePart]);
+        const response = await result.response;
+        const rawText = response.text();
+        const resultJson = parseJsonResponse(rawText);
+
+        console.log(`✅ Success using Gemini Vision OCR (${modelName})!`);
+        return res.json(resultJson);
+      } catch (err) {
+        console.warn(`⚠️ Gemini (${modelName}) failed: ${err.message}`);
+      }
+    }
+  }
+
+  // Attempt 2: Fallback to OpenRouter Vision API (google/gemini-2.5-flash)
   try {
-    console.log("⚡ Attempting image OCR & fake news analysis with Gemini 2.0 Vision...");
-    
-    if (!process.env.GEMINI_API_KEY || process.env.GEMINI_API_KEY.includes("your_")) {
-      throw new Error("Gemini API key is not configured.");
+    console.log("⚡ Falling back: Attempting vision analysis with OpenRouter (google/gemini-2.5-flash)...");
+    const apiKey = (process.env.OPENROUTER_API_KEY || "").replace(/"/g, "").trim();
+    if (!apiKey || apiKey.includes("your_")) {
+      throw new Error("OpenRouter API key is not configured.");
     }
 
-    const model = genAI.getGenerativeModel({
-      model: "gemini-2.0-flash",
-      tools: [{ googleSearch: {} }]
-    });
-
-    const imagePart = {
-      inlineData: {
-        data: base64Data,
-        mimeType: mimeType
+    const openRouterResponse = await axios.post(
+      "https://openrouter.ai/api/v1/chat/completions",
+      {
+        model: "google/gemini-2.5-flash",
+        messages: [
+          {
+            role: "user",
+            content: [
+              { type: "text", text: prompt },
+              {
+                type: "image_url",
+                image_url: {
+                  url: `data:${mimeType};base64,${base64Data}`
+                }
+              }
+            ]
+          }
+        ]
+      },
+      {
+        headers: {
+          "Authorization": `Bearer ${apiKey}`,
+          "Content-Type": "application/json",
+          "HTTP-Referer": "https://github.com/fatiya17/ai-misinformation-detector",
+          "X-Title": "TruthGuard Misinformation Detector"
+        },
+        timeout: 25000
       }
-    };
+    );
 
-    const result = await model.generateContent([prompt, imagePart]);
-    const response = await result.response;
-    const rawText = response.text();
+    const rawText = openRouterResponse.data.choices[0].message.content;
     const resultJson = parseJsonResponse(rawText);
 
-    console.log("✅ Success using Gemini 2.0 Vision OCR!");
+    console.log("✅ Success using OpenRouter Vision OCR!");
     return res.json(resultJson);
-  } catch (geminiError) {
-    console.warn(`⚠️ Gemini Vision API failed: ${geminiError.message}`);
+  } catch (openRouterError) {
+    console.error(`❌ OpenRouter Vision failed: ${openRouterError.message}`);
+    
     return res.status(500).json({
-      error: "Image Processing Failed",
-      detail: geminiError.message || "Could not extract OCR text or verify image with AI vision."
+      error: "Image OCR Processing Failed",
+      detail: "Vision AI service is currently busy or updating. Please try scanning text directly using the Text tab."
     });
   }
 };

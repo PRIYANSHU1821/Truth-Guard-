@@ -26,7 +26,7 @@ app.use("/api/analyze-image", imageAnalyzeRoutes);
 app.use("/api/trending", trendingRoutes); 
 
 
-app.listen(PORT, () => console.log(`🚀 TruthGuard Server running on port ${PORT}`));
+app.listen(PORT, "0.0.0.0", () => console.log(`🚀 TruthGuard Server running on port ${PORT} (0.0.0.0)`));
 
 app.get("/", (req, res) => {
   res.send("🚀 TruthGuard Backend is Running Successfully!");
