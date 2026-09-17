@@ -78,7 +78,7 @@ const callOpenRouter = async (prompt) => {
       headers: {
         "Authorization": `Bearer ${apiKey}`,
         "Content-Type": "application/json",
-        "HTTP-Referer": "https://github.com/fatiya17/ai-misinformation-detector",
+        "HTTP-Referer": "https://github.com/PRIYANSHU1821/Truth-Guard-",
         "X-Title": "TruthGuard Misinformation Detector"
       },
       timeout: 12000 // 12 second timeout
@@ -353,7 +353,7 @@ export const analyzeImage = async (req, res) => {
         headers: {
           "Authorization": `Bearer ${apiKey}`,
           "Content-Type": "application/json",
-          "HTTP-Referer": "https://github.com/fatiya17/ai-misinformation-detector",
+          "HTTP-Referer": "https://github.com/PRIYANSHU1821/Truth-Guard-",
           "X-Title": "TruthGuard Misinformation Detector"
         },
         timeout: 25000
