@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>TruthGuard</title>
+    <link rel="stylesheet" href="popup.css">
+  </head>
+  <body>
+    <main class="panel">
+      <header class="topbar">
+        <div class="brand"><span class="brand-mark">TG</span><span>TruthGuard</span></div>
+        <a class="settings-link" href="options.html" target="_blank" aria-label="Open backend settings">Settings</a>
+      </header>
+
+      <section class="intro">
+        <p class="eyebrow">CLAIM REVIEW</p>
+        <h1>Check the signal before you share it.</h1>
+        <p id="page-domain" class="page-domain">Reading active page...</p>
+      </section>
+
+      <section class="claim-workspace">
+        <div class="section-head"><span>Detected content</span><span id="character-count">0 characters</span></div>
+        <p id="claim-preview" class="claim-preview">Reading the current page...</p>
+        <div class="source-row"><span id="source-badge" class="source-badge">PAGE TEXT</span><button id="use-page" class="text-button" type="button">Analyze page instead</button></div>
+      </section>
+
+      <button id="analyze-claim" class="analyze-button" type="button"><span>Analyze claim</span><span aria-hidden="true">&rarr;</span></button>
+      <p id="status" class="status" aria-live="polite"></p>
+
+      <section id="result" class="result" hidden aria-live="polite">
+        <div class="result-top"><span id="verdict-dot" class="verdict-dot"></span><p id="label" class="label"></p><span id="confidence" class="confidence"></span></div>
+        <div class="confidence-track"><span id="confidence-bar"></span></div>
+        <p id="explanation" class="explanation"></p>
+        <div class="result-actions"><button id="copy-result" class="text-button" type="button">Copy assessment</button><button id="analyze-again" class="text-button" type="button">Analyze again</button></div>
+      </section>
+
+      <p class="privacy-note">Text is sent to your configured TruthGuard backend for analysis.</p>
+    </main>
+    <script src="popup.js"></script>
+  </body>
+</html>
