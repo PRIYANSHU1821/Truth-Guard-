@@ -88,6 +88,37 @@ const callOpenRouter = async (prompt) => {
   return response.data.choices[0].message.content;
 };
 
+const callGroqVision = async (prompt, base64Data, mimeType) => {
+  const apiKey = (process.env.GROQ_API_KEY || "").replace(/"/g, "").trim();
+  if (!apiKey || apiKey.includes("your_")) {
+    throw new Error("Groq API key is not configured.");
+  }
+
+  const response = await axios.post(
+    "https://api.groq.com/openai/v1/chat/completions",
+    {
+      model: "meta-llama/llama-4-scout-17b-16e-instruct",
+      messages: [{
+        role: "user",
+        content: [
+          { type: "text", text: prompt },
+          { type: "image_url", image_url: { url: `data:${mimeType};base64,${base64Data}` } }
+        ]
+      }],
+      response_format: { type: "json_object" }
+    },
+    {
+      headers: {
+        "Authorization": `Bearer ${apiKey}`,
+        "Content-Type": "application/json"
+      },
+      timeout: 25000
+    }
+  );
+
+  return response.data.choices[0].message.content;
+};
+
 // Helper to search real-time fact checks using Google Fact Check Tools API
 const fetchFactCheckContext = async (query) => {
   try {
@@ -251,8 +282,8 @@ export const analyzeImage = async (req, res) => {
     }
   `;
 
-  // Attempt 1: Gemini Direct API with models gemini-2.5-flash / gemini-1.5-flash
-  const geminiModels = ["gemini-2.5-flash", "gemini-1.5-flash", "gemini-2.5-pro"];
+  // Attempt 1: Gemini Direct API with currently available vision models.
+  const geminiModels = ["gemini-3.6-flash", "gemini-3.1-pro-preview"];
 
   if (process.env.GEMINI_API_KEY && !process.env.GEMINI_API_KEY.includes("your_")) {
     for (const modelName of geminiModels) {
@@ -279,7 +310,19 @@ export const analyzeImage = async (req, res) => {
     }
   }
 
-  // Attempt 2: Fallback to OpenRouter Vision API (google/gemini-2.5-flash)
+  // Attempt 2: Groq's vision-capable model provides an independent fallback.
+  try {
+    console.log("⚡ Falling back: Attempting vision analysis with Groq...");
+    const rawText = await callGroqVision(prompt, base64Data, mimeType);
+    const resultJson = parseJsonResponse(rawText);
+
+    console.log("✅ Success using Groq Vision OCR!");
+    return res.json(resultJson);
+  } catch (groqVisionError) {
+    console.warn(`⚠️ Groq Vision failed: ${groqVisionError.message}`);
+  }
+
+  // Attempt 3: Fallback to OpenRouter Vision API (google/gemini-2.5-flash)
   try {
     console.log("⚡ Falling back: Attempting vision analysis with OpenRouter (google/gemini-2.5-flash)...");
     const apiKey = (process.env.OPENROUTER_API_KEY || "").replace(/"/g, "").trim();
@@ -323,11 +366,18 @@ export const analyzeImage = async (req, res) => {
     console.log("✅ Success using OpenRouter Vision OCR!");
     return res.json(resultJson);
   } catch (openRouterError) {
+    const providerStatus = openRouterError.response?.status;
     console.error(`❌ OpenRouter Vision failed: ${openRouterError.message}`);
+
+    const detail = providerStatus === 401 || providerStatus === 403
+      ? "Vision AI credentials are invalid or unavailable. Configure a valid Gemini, Groq, or OpenRouter API key on the backend."
+      : providerStatus === 429
+        ? "Vision AI request limit reached. Please try again shortly."
+        : "Vision AI could not process this image. Please try a smaller, clear JPG or PNG image.";
     
     return res.status(500).json({
       error: "Image OCR Processing Failed",
-      detail: "Vision AI service is currently busy or updating. Please try scanning text directly using the Text tab."
+      detail
     });
   }
 };
